@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Finance</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --card: #13131a;
+      --card2: #1e1e28;
+      --card3: #2a2a38;
+      --sep: rgba(100,100,140,0.25);
+      --text1: #fff;
+      --text2: rgba(235,235,245,0.6);
+      --text3: rgba(235,235,245,0.28);
+      --red: #e63228;
+      --red2: #ff4f44;
+      --blue: #1a73e8;
+      --blue2: #4d9fff;
+      --web: rgba(200,40,30,0.18);
+      --green: #30d158;
+      --orange: #ff9f0a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
+    html { height: 100%; }
+    body {
+      font-family: -apple-system, 'SF Pro Display', BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+      background: var(--bg);
+      color: var(--text1);
+      min-height: 100vh;
+      padding-bottom: calc(100px + env(safe-area-inset-bottom));
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar { width: 0; }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"] { -moz-appearance: textfield; }
+
+    /* ── Spiderwoman title gradient ── */
+    .spiderwoman-name {
+      background: linear-gradient(90deg, #ff4f44 0%, #c0392b 30%, #4d9fff 70%, #1a73e8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+    }
+
+    /* ── Spider web SVG background ── */
+    .web-bg {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 220px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Header ── */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,15,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--sep);
+      padding: 14px 20px 10px;
+    }
+    .top-bar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo-icon {
+      width: 28px; height: 28px;
+      background: var(--red);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-icon svg { width: 18px; height: 18px; }
+    .logo-text { color: var(--text1); }
+    .logo-text span { color: var(--red2); }
+    .date-pill {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text2);
+      background: var(--card);
+      padding: 5px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--sep);
+    }
+
+    /* ── Bottom nav ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(10,10,15,0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-top: 1px solid var(--sep);
+      padding: 10px 8px calc(14px + env(safe-area-inset-bottom)) 8px;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 8px 14px 6px;
+      border-radius: 14px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: rgba(235,235,245,0.35);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: color 0.18s, background 0.18s;
+      min-width: 64px;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+    }
+    .nav-item svg { width: 24px; height: 24px; transition: filter 0.18s; }
+    .nav-item.active {
+      color: var(--red2);
+      background: rgba(255,79,68,0.1);
+    }
+    .nav-item.active svg {
+      filter: drop-shadow(0 0 6px rgba(255,79,68,0.7));
+    }
+
+    /* ── Panels ── */
+    .panel { display: none; padding: 16px 16px 0; position: relative; z-index: 1; }
+    .panel.active { display: block; }
+
+    /* ── Page header ── */
+    .page-header { margin-bottom: 20px; padding: 0 2px; }
+    .page-title { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
+    .page-sub { font-size: 13px; color: var(--text2); margin-top: 3px; }
+
+    /* ── Hero debt card ── */
+    .debt-hero {
+      background: linear-gradient(135deg, rgba(230,50,40,0.22) 0%, rgba(10,20,60,0.4) 50%, rgba(26,115,232,0.15) 100%);
+      border: 1px solid rgba(230,50,40,0.3);
+      border-radius: 20px;
+      padding: 22px 20px;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    .debt-hero::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      background: radial-gradient(circle, rgba(230,50,40,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .debt-hero-label { font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+    .debt-hero-num { font-size: 42px; font-weight: 800; letter-spacing: -1px; line-height: 1; color: var(--red2); }
+    .debt-hero-sub { font-size: 12px; color: var(--text2); margin-top: 8px; }
+    .hero-row { display: flex; justify-content: space-between; margin-top: 14px; gap: 8px; }
+    .hero-mini { flex: 1; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 10px 12px; }
+    .hero-mini-label { font-size: 10px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+    .hero-mini-val { font-size: 15px; font-weight: 700; margin-top: 2px; }
+
+    /* ── Stat grid ── */
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+    .stat-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid var(--sep);
+    }
+    .stat-card.full { grid-column: span 2; }
+    .stat-label { font-size: 11px; font-weight: 700; color: var(--red2); opacity: 0.8; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .stat-val { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; line-height: 1; }
+    .stat-sub { font-size: 12px; color: var(--text2); margin-top: 5px; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--sep);
+      border-left: 3px solid var(--red);
+      margin-bottom: 12px;
+    }
+    .card-header {
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid var(--sep);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--red2);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── Rows ── */
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--sep);
+    }
+    .row:last-child { border-bottom: none; }
+    .row-left { flex: 1; min-width: 0; }
+    .row-label { font-size: 15px; font-weight: 500; }
+    .row-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+    .row-right { text-align: right; flex-shrink: 0; margin-left: 12px; }
+    .row-value { font-size: 15px; font-weight: 700; }
+
+    /* ── Editable row value ── */
+    .row-input {
+      font-size: 15px;
+      font-weight: 700;
+      background: var(--card2);
+      border: none;
+      border-radius: 8px;
+      color: var(--text1);
+      padding: 4px 10px;
+      width: 110px;
+      outline: none;
+      font-family: inherit;
+      text-align: right;
+    }
+    .row-input:focus { background: var(--card3); border: 1px solid rgba(230,50,40,0.4); }
+
+    /* ── Tags ── */
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.04em;
+      margin-top: 4px;
+    }
+    .tag-paid     { background: rgba(84,84,88,0.25); color: var(--text2); }
+    .tag-now      { background: rgba(230,50,40,0.2); color: var(--red2); border: 1px solid rgba(230,50,40,0.3); }
+    .tag-soon     { background: rgba(255,159,10,0.15); color: var(--orange); }
+    .tag-upcoming { background: rgba(77,159,255,0.12); color: var(--blue2); }
+
+    /* ── Progress bars ── */
+    .prog-wrap { padding: 14px 16px; }
+    .prog-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+    .prog-name { font-size: 14px; font-weight: 600; }
+    .prog-amt { font-size: 12px; color: var(--text2); }
+    .prog-track {
+      height: 8px;
+      background: var(--card2);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .prog-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.8s cubic-bezier(0.34,1.4,0.64,1);
+      min-width: 0;
+    }
+    .prog-footer { display: flex; justify-content: space-between; margin-top: 6px; }
+    .prog-pct { font-size: 11px; color: var(--text2); }
+    .prog-left { font-size: 11px; color: var(--text3); }
+    .prog-sep { height: 1px; background: var(--sep); margin: 0 16px; }
+    .prog-edit { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: var(--text2); }
+    .prog-input {
+      background: var(--card2);
+      border: none;
+      border-radius: 8px;
+      color: var(--text1);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 6px 10px;
+      width: 130px;
+      outline: none;
+      font-family: inherit;
+      text-align: right;
+      margin-left: auto;
+    }
+    .prog-input:focus { background: var(--card3); border: 1px solid rgba(230,50,40,0.35); }
+
+    /* ── Priority checks ── */
+    .pri-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 13px 16px; border-bottom: 1px solid var(--sep);
+      cursor: pointer;
+    }
+    .pri-row:last-child { border-bottom: none; }
+    .pri-row.done .pri-text { color: var(--text3); text-decoration: line-through; }
+    .pri-check {
+      width: 22px; height: 22px; border-radius: 50%;
+      border: 2px solid var(--card3); display: flex;
+      align-items: center; justify-content: center; flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    .pri-row.done .pri-check { background: var(--red); border-color: var(--red); }
+    .checkmark { width: 10px; height: 10px; display: none; }
+    .pri-row.done .checkmark { display: block; }
+    .pri-text { font-size: 15px; }
+
+    /* ── Notes ── */
+    .notes-area {
+      width: 100%; background: none; border: none;
+      color: var(--text1); font-size: 15px; font-family: inherit;
+      resize: none; outline: none; min-height: 90px;
+      padding: 14px 16px; line-height: 1.6;
+    }
+    .notes-area::placeholder { color: var(--text3); }
+
+    /* ── Section label ── */
+    .sec { font-size: 11px; font-weight: 700; color: var(--red2); text-transform: uppercase; letter-spacing: 0.09em; margin: 20px 0 8px 2px; opacity: 0.85; }
+    .sec:first-child { margin-top: 0; }
+
+    /* ── Hero cash input ── */
+    .cash-input {
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1;
+      background: none;
+      border: none;
+      color: var(--text1);
+      width: 100%;
+      outline: none;
+      padding: 0;
+      font-family: inherit;
+    }
+    .cash-input::placeholder { color: var(--text3); }
+
+    /* ── Red accent chip ── */
+    .chip {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 20px;
+      background: rgba(230,50,40,0.15);
+      color: var(--red2);
+      border: 1px solid rgba(230,50,40,0.25);
+      margin-top: 5px;
+    }
+    .chip-green { background: rgba(48,209,88,0.12); color: var(--green); border-color: rgba(48,209,88,0.2); }
+    .chip-blue { background: rgba(77,159,255,0.12); color: var(--blue2); border-color: rgba(77,159,255,0.2); }
+    .chip-orange { background: rgba(255,159,10,0.12); color: var(--orange); border-color: rgba(255,159,10,0.2); }
+
+    /* ── Due-date card ── */
+    .due-card {
+      background: var(--card);
+      border-radius: 16px;
+      border: 1px solid var(--sep);
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    .due-stripe {
+      height: 3px;
+      width: 100%;
+    }
+
+    /* ── Pay buttons ── */
+    .pay-btn {
+      background: rgba(48,209,88,0.12);
+      border: 1px solid rgba(48,209,88,0.25);
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+      letter-spacing: 0.02em;
+    }
+    .pay-btn:active { opacity: 0.7; }
+    .confirm-btn {
+      background: linear-gradient(135deg, #e63228 0%, #a02080 50%, #1a73e8 100%);
+      border: none;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 7px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+      letter-spacing: 0.03em;
+      box-shadow: 0 2px 12px rgba(230,50,40,0.35);
+    }
+    .confirm-btn:active { opacity: 0.8; }
+    .cancel-btn {
+      background: none;
+      border: 1px solid var(--sep);
+      color: var(--text2);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .cancel-btn:active { opacity: 0.7; }
+    .undo-btn {
+      background: rgba(255,159,10,0.12);
+      border: 1px solid rgba(255,159,10,0.25);
+      color: var(--orange);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .undo-btn:active { opacity: 0.7; }
+    .confirm-row { display: flex; gap: 8px; align-items: center; margin-top: 6px; padding: 4px 0; }
+    .row-right-col { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+    .tag-row { display: flex; gap: 6px; align-items: center; }
+    .row.confirming { background: rgba(230,50,40,0.04); }
+
+    /* ── Bottom spacer ── */
+    .spacer { height: 20px; }
+
+    /* ── Inline editable labels ── */
+    .editable-label {
+      background: none;
+      border: none;
+      border-bottom: 1px dashed rgba(200,200,220,0.2);
+      color: var(--text1);
+      font-size: 15px;
+      font-weight: 500;
+      font-family: inherit;
+      outline: none;
+      min-width: 100px;
+      max-width: 160px;
+    }
+    .editable-label:focus { border-bottom-color: var(--red2); }
+
+    /* Spider web overlay */
+    .web-corner {
+      position: fixed;
+      top: 0; right: 0;
+      width: 120px; height: 120px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.08;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Spider web corner decoration -->
+<svg class="web-corner" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <line x1="120" y1="0" x2="0" y2="120" stroke="#e63228" stroke-width="0.8"/>
+  <line x1="120" y1="0" x2="30" y2="120" stroke="#e63228" stroke-width="0.8"/>
+  <line x1="120" y1="0" x2="60" y2="120" stroke="#e63228" stroke-width="0.8"/>
+  <line x1="120" y1="0" x2="90" y2="120" stroke="#e63228" stroke-width="0.8"/>
+  <line x1="120" y1="0" x2="120" y2="120" stroke="#e63228" stroke-width="0.8"/>
+  <line x1="120" y1="0" x2="0" y2="30" stroke="#e63228" stroke-width="0.8"/>
+  <line x1="120" y1="0" x2="0" y2="60" stroke="#e63228" stroke-width="0.8"/>
+  <line x1="120" y1="0" x2="0" y2="90" stroke="#e63228" stroke-width="0.8"/>
+  <path d="M120,15 Q75,15 15,75" stroke="#e63228" stroke-width="0.6" fill="none"/>
+  <path d="M120,30 Q75,30 30,75" stroke="#e63228" stroke-width="0.6" fill="none"/>
+  <path d="M120,50 Q75,50 50,75" stroke="#e63228" stroke-width="0.6" fill="none"/>
+  <path d="M120,70 Q75,70 70,90" stroke="#e63228" stroke-width="0.6" fill="none"/>
+  <path d="M15,0 Q15,60 75,100" stroke="#e63228" stroke-width="0.6" fill="none"/>
+  <path d="M35,0 Q35,55 80,95" stroke="#e63228" stroke-width="0.6" fill="none"/>
+  <path d="M55,0 Q55,50 90,90" stroke="#e63228" stroke-width="0.6" fill="none"/>
+  <path d="M75,0 Q75,40 100,80" stroke="#e63228" stroke-width="0.6" fill="none"/>
+</svg>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="top-bar-inner">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="3" fill="white"/>
+          <line x1="12" y1="2" x2="12" y2="22" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="2" y1="12" x2="22" y2="12" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="4.9" y1="4.9" x2="19.1" y2="19.1" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="19.1" y1="4.9" x2="4.9" y2="19.1" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="5" stroke="white" stroke-width="1" fill="none"/>
+          <circle cx="12" cy="12" r="9" stroke="white" stroke-width="0.8" fill="none"/>
+        </svg>
+      </div>
+      <div class="logo-text">Finance<span>.</span></div>
+    </div>
+    <div class="date-pill" id="datePill">—</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main>
+
+<!-- ═══ TODAY ═══ -->
+<div class="panel active" id="tab-today">
+
+  <div class="page-header" style="margin-top:16px;">
+    <div class="page-title">Hey, <span class="spiderwoman-name">Spiderwoman.</span></div>
+    <div class="page-sub" id="todayDateText"></div>
+  </div>
+
+  <!-- Cash + income quick stats -->
+  <div class="stat-grid">
+    <div class="stat-card full" style="background: linear-gradient(135deg, rgba(10,30,80,0.6) 0%, rgba(13,13,20,0.9) 100%); border-color: rgba(26,115,232,0.3);">
+      <div class="stat-label">Cash on Hand</div>
+      <input class="cash-input" id="cashInput" type="number" step="0.01" placeholder="0.00" />
+      <div class="stat-sub">Tap to update · saves automatically</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Monthly Income</div>
+      <div class="stat-val" style="color:var(--green);">~$3,033</div>
+      <div class="stat-sub">UPS + Churchill</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Left Over</div>
+      <div class="stat-val" style="color:var(--blue2);" id="leftOverVal">~$852</div>
+      <div class="stat-sub">After all expenses</div>
+    </div>
+  </div>
+
+  <!-- Upcoming payments — rendered by JS -->
+  <div class="sec">Debt Payments Due</div>
+  <div class="card" id="paymentsContainer"></div>
+
+  <!-- Bills — rendered by JS -->
+  <div class="sec">Bills &amp; Recurring</div>
+  <div class="card" id="billsContainer"></div>
+
+  <!-- Today notes -->
+  <div class="sec">Today's Notes</div>
+  <div class="card">
+    <textarea class="notes-area" id="notesArea" placeholder="What's the move today?"></textarea>
+  </div>
+
+  <div class="spacer"></div>
+</div>
+
+
+<!-- ═══ DEBTS ═══ -->
+<div class="panel" id="tab-debts">
+
+  <div class="page-header" style="margin-top:16px;">
+    <div class="page-title">Debts</div>
+    <div class="page-sub">Update balances as you pay them down</div>
+  </div>
+
+  <!-- Hero total -->
+  <div class="debt-hero">
+    <div class="debt-hero-label">Total Debt Remaining</div>
+    <div class="debt-hero-num" id="totalDebtDisplay">$26,920.12</div>
+    <div class="debt-hero-sub">Tap any balance below to update it</div>
+    <div class="hero-row">
+      <div class="hero-mini">
+        <div class="hero-mini-label">Min/Month</div>
+        <div class="hero-mini-val" style="color:var(--red2);">$1,141</div>
+      </div>
+      <div class="hero-mini">
+        <div class="hero-mini-label">Debts</div>
+        <div class="hero-mini-val" style="color:var(--blue2);">5 accounts</div>
+      </div>
+      <div class="hero-mini">
+        <div class="hero-mini-label">Surplus</div>
+        <div class="hero-mini-val" style="color:var(--green);">~$852/mo</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Debt bars -->
+  <div class="card">
+
+    <div class="prog-wrap">
+      <div class="prog-header">
+        <span class="prog-name">Capital One Car Loan</span>
+        <span class="prog-amt">min $416/mo</span>
+      </div>
+      <div class="prog-edit">
+        <span>Balance</span>
+        <input class="prog-input" id="carInput" type="number" step="0.01" placeholder="19678.00" />
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="carBar" style="background:var(--blue2);"></div></div>
+      <div class="prog-footer"><span class="prog-pct" id="carPct">0% paid off</span><span class="prog-left" id="carLeft">$19,678.00 remaining</span></div>
+    </div>
+
+    <div class="prog-sep"></div>
+
+    <div class="prog-wrap">
+      <div class="prog-header">
+        <span class="prog-name">Capital One Credit Card</span>
+        <span class="prog-amt">min $500/mo</span>
+      </div>
+      <div class="prog-edit">
+        <span>Balance</span>
+        <input class="prog-input" id="cap1Input" type="number" step="0.01" placeholder="4243.12" />
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="cap1Bar" style="background:var(--red2);"></div></div>
+      <div class="prog-footer"><span class="prog-pct" id="cap1Pct">0% paid off</span><span class="prog-left" id="cap1Left">$4,243.12 remaining</span></div>
+    </div>
+
+    <div class="prog-sep"></div>
+
+    <div class="prog-wrap">
+      <div class="prog-header">
+        <span class="prog-name">University of Louisville</span>
+        <span class="prog-amt">min $120/mo</span>
+      </div>
+      <div class="prog-edit">
+        <span>Balance</span>
+        <input class="prog-input" id="univInput" type="number" step="0.01" placeholder="1558.00" />
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="univBar" style="background:var(--orange);"></div></div>
+      <div class="prog-footer"><span class="prog-pct" id="univPct">0% paid off</span><span class="prog-left" id="univLeft">$1,558.00 remaining</span></div>
+    </div>
+
+    <div class="prog-sep"></div>
+
+    <div class="prog-wrap">
+      <div class="prog-header">
+        <span class="prog-name">L&amp;N Credit Card</span>
+        <span class="prog-amt">min $25/mo</span>
+      </div>
+      <div class="prog-edit">
+        <span>Balance</span>
+        <input class="prog-input" id="lnInput" type="number" step="0.01" placeholder="797.00" />
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="lnBar" style="background:var(--red);"></div></div>
+      <div class="prog-footer"><span class="prog-pct" id="lnPct">0% paid off</span><span class="prog-left" id="lnLeft">$797.00 remaining</span></div>
+    </div>
+
+    <div class="prog-sep"></div>
+
+    <div class="prog-wrap">
+      <div class="prog-header">
+        <span class="prog-name">Best Buy</span>
+        <span class="prog-amt">min $80/mo</span>
+      </div>
+      <div class="prog-edit">
+        <span>Balance</span>
+        <input class="prog-input" id="bbInput" type="number" step="0.01" placeholder="644.00" />
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="bbBar" style="background:var(--blue2);"></div></div>
+      <div class="prog-footer"><span class="prog-pct" id="bbPct">0% paid off</span><span class="prog-left" id="bbLeft">$644.00 remaining</span></div>
+    </div>
+
+  </div>
+
+  <!-- Payoff strategy -->
+  <div class="sec">Payoff Strategy</div>
+  <div class="card">
+    <div class="pri-row" onclick="togglePri(0)">
+      <div class="pri-check"><svg class="checkmark" viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,8 8.5,2" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="pri-text">Pay off Best Buy ($644) first — smallest debt</div>
+    </div>
+    <div class="pri-row" onclick="togglePri(1)">
+      <div class="pri-check"><svg class="checkmark" viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,8 8.5,2" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="pri-text">Pay off L&amp;N Credit Card ($797)</div>
+    </div>
+    <div class="pri-row" onclick="togglePri(2)">
+      <div class="pri-check"><svg class="checkmark" viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,8 8.5,2" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="pri-text">Pay off University of Louisville ($1,558)</div>
+    </div>
+    <div class="pri-row" onclick="togglePri(3)">
+      <div class="pri-check"><svg class="checkmark" viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,8 8.5,2" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="pri-text">Crush Capital One Credit Card ($4,243)</div>
+    </div>
+    <div class="pri-row" onclick="togglePri(4)">
+      <div class="pri-check"><svg class="checkmark" viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,8 8.5,2" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="pri-text">Build $500 emergency fund while paying debts</div>
+    </div>
+    <div class="pri-row" onclick="togglePri(5)">
+      <div class="pri-check"><svg class="checkmark" viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,8 8.5,2" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="pri-text">Keep all payments current — no late fees</div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+</div>
+
+
+<!-- ═══ BUDGET ═══ -->
+<div class="panel" id="tab-budget">
+
+  <div class="page-header" style="margin-top:16px;">
+    <div class="page-title">Budget</div>
+    <div class="page-sub" id="budgetDateSub"></div>
+  </div>
+
+  <!-- 3 stat cards -->
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-label">Income</div>
+      <div class="stat-val" style="color:var(--green);">$3,033</div>
+      <div class="stat-sub">UPS + Churchill Downs</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Expenses</div>
+      <div class="stat-val" style="color:var(--red2);">$2,181</div>
+      <div class="stat-sub">All bills + debt + living</div>
+    </div>
+    <div class="stat-card full" style="background: linear-gradient(135deg, rgba(48,209,88,0.1) 0%, rgba(13,13,20,0.9) 100%); border-color: rgba(48,209,88,0.25);">
+      <div class="stat-label">Monthly Surplus</div>
+      <div class="stat-val" style="color:var(--green);">~$852</div>
+      <div class="stat-sub">Available for savings &amp; extra debt payments</div>
+    </div>
+  </div>
+
+  <!-- Income -->
+  <div class="sec">Income</div>
+  <div class="card">
+    <div class="row">
+      <div class="row-left"><div class="row-label">UPS</div><div class="row-sub">~$450/week</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--green);">+$1,950</div></div>
+    </div>
+    <div class="row">
+      <div class="row-left"><div class="row-label">Churchill Downs</div><div class="row-sub">~$500 every 2 weeks</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--green);">+$1,083</div></div>
+    </div>
+    <div class="row" style="background:rgba(48,209,88,0.05);">
+      <div class="row-left"><div class="row-label" style="font-weight:800;">Total Income</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--green);font-size:18px;">+$3,033</div></div>
+    </div>
+  </div>
+
+  <!-- Debt payments -->
+  <div class="sec">Debt Payments</div>
+  <div class="card">
+    <div class="row">
+      <div class="row-left"><div class="row-label">Capital One Credit Card</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$500</div></div>
+    </div>
+    <div class="row">
+      <div class="row-left"><div class="row-label">Capital One Car Loan</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$416</div></div>
+    </div>
+    <div class="row">
+      <div class="row-left"><div class="row-label">University of Louisville</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$120</div></div>
+    </div>
+    <div class="row">
+      <div class="row-left"><div class="row-label">Best Buy</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$80</div></div>
+    </div>
+    <div class="row">
+      <div class="row-left"><div class="row-label">L&amp;N Credit Card</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$25</div></div>
+    </div>
+    <div class="row" style="background:rgba(255,69,58,0.05);">
+      <div class="row-left"><div class="row-label" style="font-weight:800;">Total Debt Payments</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);font-size:17px;">−$1,141</div></div>
+    </div>
+  </div>
+
+  <!-- Bills -->
+  <div class="sec">Bills &amp; Subscriptions</div>
+  <div class="card">
+    <div class="row">
+      <div class="row-left"><div class="row-label">Car Insurance</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$320</div></div>
+    </div>
+    <div class="row">
+      <div class="row-left"><div class="row-label">Gas</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$173</div></div>
+    </div>
+    <div class="row">
+      <div class="row-left"><div class="row-label">Poppy (food)</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$217</div></div>
+    </div>
+    <div class="row">
+      <div class="row-left"><div class="row-label">Phone</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$79</div></div>
+    </div>
+    <div class="row">
+      <div class="row-left"><div class="row-label">Planet Fitness</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--text2);">−$24</div></div>
+    </div>
+    <div class="row">
+      <div class="row-left"><div class="row-label">Netflix</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--text2);">−$10</div></div>
+    </div>
+    <div class="row" style="background:rgba(255,69,58,0.05);">
+      <div class="row-left"><div class="row-label" style="font-weight:800;">Total Bills</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);font-size:17px;">−$823</div></div>
+    </div>
+  </div>
+
+  <!-- Bottom line -->
+  <div class="sec">Bottom Line</div>
+  <div class="card">
+    <div class="row">
+      <div class="row-left"><div class="row-label">Income</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--green);">+$3,033</div></div>
+    </div>
+    <div class="row">
+      <div class="row-left"><div class="row-label">Debt Payments</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$1,141</div></div>
+    </div>
+    <div class="row">
+      <div class="row-left"><div class="row-label">Bills &amp; Living</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$1,040</div></div>
+    </div>
+    <div class="row" style="background:rgba(48,209,88,0.07);">
+      <div class="row-left">
+        <div class="row-label" style="font-weight:800;font-size:16px;">Left for Savings</div>
+        <div class="row-sub">per month, after everything</div>
+      </div>
+      <div class="row-right"><div class="row-value" style="color:var(--green);font-size:22px;font-weight:800;">~$852</div></div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+</div>
+
+
+<!-- ═══ SAVINGS ═══ -->
+<div class="panel" id="tab-savings">
+
+  <div class="page-header" style="margin-top:16px;">
+    <div class="page-title">Savings</div>
+    <div class="page-sub">Set a goal, track your progress</div>
+  </div>
+
+  <!-- Emergency fund -->
+  <div class="sec">Emergency Fund</div>
+  <div class="card">
+    <div class="prog-wrap">
+      <div class="prog-header">
+        <span class="prog-name">Phase 1 — First $500</span>
+        <span class="prog-amt" style="color:var(--green);">Goal: $500</span>
+      </div>
+      <div class="prog-edit">
+        <span>Your balance</span>
+        <input class="prog-input" id="savingsInput" type="number" step="0.01" placeholder="0.00" />
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="efBar1" style="background:var(--green);"></div></div>
+      <div class="prog-footer"><span class="prog-pct" id="efPct1">0% complete</span><span class="prog-left" id="efLeft1">$500 to go</span></div>
+    </div>
+    <div class="prog-sep"></div>
+    <div class="prog-wrap">
+      <div class="prog-header">
+        <span class="prog-name">Phase 2 — Full $1,000</span>
+        <span class="prog-amt" style="color:var(--blue2);">Goal: $1,000</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="efBar2" style="background:var(--blue2);"></div></div>
+      <div class="prog-footer"><span class="prog-pct" id="efPct2">0% complete</span><span class="prog-left" id="efLeft2">$1,000 to go</span></div>
+    </div>
+  </div>
+
+  <!-- Savings tips -->
+  <div class="sec">Plan</div>
+  <div class="card">
+    <div class="row">
+      <div class="row-left">
+        <div class="row-label">Monthly surplus available</div>
+        <div class="row-sub">After all expenses</div>
+      </div>
+      <div class="row-right"><div class="row-value" style="color:var(--green);">~$852</div></div>
+    </div>
+    <div class="row">
+      <div class="row-left">
+        <div class="row-label">To hit $500 emergency fund</div>
+        <div class="row-sub">Put aside ~$100–200/mo</div>
+      </div>
+      <div class="row-right"><div class="row-value" style="color:var(--blue2);">3–5 months</div></div>
+    </div>
+    <div class="row">
+      <div class="row-left">
+        <div class="row-label">Remaining surplus (after saving $150)</div>
+        <div class="row-sub">For extra debt payments</div>
+      </div>
+      <div class="row-right"><div class="row-value" style="color:var(--orange);">~$702</div></div>
+    </div>
+  </div>
+
+  <!-- Custom goal -->
+  <div class="sec">Custom Savings Goal</div>
+  <div class="card">
+    <div class="prog-wrap">
+      <div class="prog-header">
+        <span class="prog-name">My Goal</span>
+      </div>
+      <div class="prog-edit" style="margin-bottom:6px;">
+        <span>Goal name</span>
+        <input class="prog-input" id="goalName" type="text" placeholder="e.g. New tires" style="font-size:13px;" />
+      </div>
+      <div class="prog-edit" style="margin-bottom:6px;">
+        <span>Target amount ($)</span>
+        <input class="prog-input" id="goalTarget" type="number" step="0.01" placeholder="500.00" />
+      </div>
+      <div class="prog-edit">
+        <span>Saved so far ($)</span>
+        <input class="prog-input" id="goalCurrent" type="number" step="0.01" placeholder="0.00" />
+      </div>
+      <div class="prog-track" style="margin-top:8px;"><div class="prog-fill" id="goalBar" style="background: linear-gradient(90deg, var(--red), var(--blue2));"></div></div>
+      <div class="prog-footer"><span class="prog-pct" id="goalPct">0% complete</span><span class="prog-left" id="goalLeft"></span></div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+</div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="showTab('today',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/>
+      <rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>
+    </svg>
+    Today
+  </button>
+  <button class="nav-item" onclick="showTab('debts',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+    </svg>
+    Debts
+  </button>
+  <button class="nav-item" onclick="showTab('budget',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+    </svg>
+    Budget
+  </button>
+  <button class="nav-item" onclick="showTab('savings',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>
+    </svg>
+    Savings
+  </button>
+</nav>
+
+<script>
+  // ── Date ──
+  const now = new Date();
+  const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const MONTHS_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('todayDateText').textContent = DAYS[now.getDay()] + ', ' + MONTHS[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear();
+  document.getElementById('datePill').textContent = MONTHS[now.getMonth()] + ' ' + now.getDate();
+  document.getElementById('budgetDateSub').textContent = MONTHS_LONG[now.getMonth()] + ' ' + now.getFullYear() + ' · monthly snapshot';
+
+  // ── localStorage helpers ──
+  const LS = 'spider_fin_';
+  const get = (k, d) => localStorage.getItem(LS + k) ?? d;
+  const set = (k, v) => localStorage.setItem(LS + k, v);
+
+  // ── Tab navigation ──
+  function showTab(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // ── Cash input ──
+  const cashEl = document.getElementById('cashInput');
+  cashEl.value = get('cash', '270');
+  cashEl.addEventListener('input', () => set('cash', cashEl.value));
+
+  // ── Notes ──
+  const notesEl = document.getElementById('notesArea');
+  const todayKey = now.toISOString().split('T')[0];
+  notesEl.value = get('notes_' + todayKey, '');
+  notesEl.addEventListener('input', () => set('notes_' + todayKey, notesEl.value));
+
+  // ── fmt helpers ──
+  function fmt(n) {
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function fmtDate(d) {
+    return MONTHS[d.getMonth()] + ' ' + d.getDate();
+  }
+
+  // ── Payment data ──
+  const PAYMENTS = [
+    { id: 'p_cap1cc',  name: 'Capital One Credit Card', amount: '$500',  freq: 'monthly', baseDay: 11, init: '2026-06-11' },
+    { id: 'p_uofl',    name: 'Univ. of Louisville',     amount: '$120',  freq: 'monthly', baseDay: 15, init: '2026-06-15' },
+    { id: 'p_cap1car', name: 'Capital One Car Loan',    amount: '$416',  freq: 'monthly', baseDay: 18, init: '2026-06-18' },
+    { id: 'p_bestbuy', name: 'Best Buy',                amount: '$80',   freq: 'monthly', baseDay: 25, init: '2026-06-25' },
+    { id: 'p_ln',      name: 'L&N Credit Card',         amount: '$25',   freq: 'monthly', baseDay: 1,  init: '2026-07-01' },
+  ];
+
+  const BILLS = [
+    { id: 'b_insurance', name: 'Car Insurance',  amount: '$320',  freq: 'monthly', baseDay: 1,  init: '2026-07-01' },
+    { id: 'b_phone',     name: 'Phone',          amount: '$79',   freq: 'monthly', baseDay: 17, init: '2026-06-17' },
+    { id: 'b_poppy',     name: 'Poppy (food)',   amount: '~$50',  freq: 'weekly',  baseDay: null, init: '2026-06-14' },
+    { id: 'b_gas',       name: 'Gas',            amount: '~$60',  freq: 'days10',  baseDay: null, init: '2026-06-15' },
+    { id: 'b_netflix',   name: 'Netflix',        amount: '$10',   freq: 'monthly', baseDay: 1,  init: '2026-07-01' },
+    { id: 'b_planet',    name: 'Planet Fitness', amount: '$24',   freq: 'monthly', baseDay: 1,  init: '2026-07-01' },
+  ];
+
+  // ── Advance to next due date ──
+  function advanceDate(isoDate, freq, baseDay) {
+    const d = new Date(isoDate + 'T12:00:00');
+    if (freq === 'monthly') {
+      let m = d.getMonth() + 1;
+      let y = d.getFullYear();
+      if (m > 11) { m = 0; y++; }
+      return new Date(y, m, baseDay).toISOString().split('T')[0];
+    } else if (freq === 'weekly') {
+      d.setDate(d.getDate() + 7);
+      return d.toISOString().split('T')[0];
+    } else if (freq === 'days10') {
+      d.setDate(d.getDate() + 10);
+      return d.toISOString().split('T')[0];
+    }
+    return isoDate;
+  }
+
+  // ── Tag color based on days remaining ──
+  function getTag(isoDate) {
+    const due = new Date(isoDate + 'T12:00:00');
+    const today = new Date(); today.setHours(0,0,0,0);
+    const diff = Math.ceil((due - today) / 86400000);
+    if (diff < 0)  return { cls: 'tag-now',      text: 'OVERDUE' };
+    if (diff === 0) return { cls: 'tag-now',      text: 'DUE TODAY' };
+    if (diff <= 7)  return { cls: 'tag-soon',     text: 'DUE SOON' };
+    return              { cls: 'tag-upcoming', text: fmtDate(due).toUpperCase() };
+  }
+
+  function tagColor(cls) {
+    if (cls === 'tag-now')      return 'var(--red2)';
+    if (cls === 'tag-soon')     return 'var(--orange)';
+    return 'var(--blue2)';
+  }
+
+  // ── Per-payment UI state: 'normal' | 'confirming' | 'done' ──
+  const payState = {};
+  const prevDates = {};
+
+  // ── Render a payment list into a container ──
+  function renderList(items, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    const sorted = [...items].sort((a, b) => get(a.id, a.init).localeCompare(get(b.id, b.init)));
+
+    sorted.forEach((p, idx) => {
+      const dueISO = get(p.id, p.init);
+      const tag = getTag(dueISO);
+      const due = new Date(dueISO + 'T12:00:00');
+      const state = payState[p.id] || 'normal';
+      const isLast = idx === sorted.length - 1;
+
+      const row = document.createElement('div');
+      row.className = 'row' + (state === 'confirming' ? ' confirming' : '');
+      if (isLast) row.style.borderBottom = 'none';
+
+      let rightCol = '';
+
+      if (state === 'normal') {
+        rightCol =
+          '<div class="row-right-col">' +
+            '<div class="row-value" style="color:' + tagColor(tag.cls) + ';">' + p.amount + '</div>' +
+            '<div class="tag-row">' +
+              '<span class="tag ' + tag.cls + '">' + tag.text + '</span>' +
+              '<button class="pay-btn" onclick="startConfirm(\'' + p.id + '\',\'' + containerId + '\')">Paid ✓</button>' +
+            '</div>' +
+          '</div>';
+      } else if (state === 'confirming') {
+        rightCol =
+          '<div class="row-right-col">' +
+            '<div class="row-value" style="color:' + tagColor(tag.cls) + ';">' + p.amount + '</div>' +
+            '<div class="confirm-row">' +
+              '<button class="cancel-btn" onclick="cancelConfirm(\'' + p.id + '\',\'' + containerId + '\')">Cancel</button>' +
+              '<button class="confirm-btn" onclick="confirmPaid(\'' + p.id + '\',\'' + dueISO + '\',\'' + p.freq + '\',' + p.baseDay + ',\'' + containerId + '\')">Confirm Paid →</button>' +
+            '</div>' +
+          '</div>';
+      } else if (state === 'done') {
+        rightCol =
+          '<div class="row-right-col">' +
+            '<div class="row-value" style="color:var(--text3);">' + p.amount + '</div>' +
+            '<div class="tag-row">' +
+              '<span class="tag tag-paid">PAID ✓</span>' +
+              '<button class="undo-btn" onclick="undoPaid(\'' + p.id + '\',\'' + containerId + '\')">↩ Undo</button>' +
+            '</div>' +
+          '</div>';
+      }
+
+      row.innerHTML =
+        '<div class="row-left">' +
+          '<div class="row-label">' + p.name + '</div>' +
+          '<div class="row-sub">' + (state === 'done' ? 'Next: ' : 'Due ') + fmtDate(due) + '</div>' +
+        '</div>' +
+        rightCol;
+
+      container.appendChild(row);
+    });
+  }
+
+  function startConfirm(id, containerId) {
+    payState[id] = 'confirming';
+    renderList(containerId === 'paymentsContainer' ? PAYMENTS : BILLS, containerId);
+  }
+
+  function cancelConfirm(id, containerId) {
+    payState[id] = 'normal';
+    renderList(containerId === 'paymentsContainer' ? PAYMENTS : BILLS, containerId);
+  }
+
+  function confirmPaid(id, currentISO, freq, baseDay, containerId) {
+    prevDates[id] = currentISO;
+    const next = advanceDate(currentISO, freq, baseDay);
+    set(id, next);
+    payState[id] = 'done';
+    renderList(containerId === 'paymentsContainer' ? PAYMENTS : BILLS, containerId);
+  }
+
+  function undoPaid(id, containerId) {
+    if (prevDates[id]) {
+      set(id, prevDates[id]);
+      delete prevDates[id];
+    }
+    payState[id] = 'normal';
+    renderList(containerId === 'paymentsContainer' ? PAYMENTS : BILLS, containerId);
+  }
+
+  // Initial render
+  renderList(PAYMENTS, 'paymentsContainer');
+  renderList(BILLS, 'billsContainer');
+
+  // ── Debt bars ──
+  const DEBTS = [
+    { id: 'carInput',  barId: 'carBar',  pctId: 'carPct',  leftId: 'carLeft',  orig: 19678.00 },
+    { id: 'cap1Input', barId: 'cap1Bar', pctId: 'cap1Pct', leftId: 'cap1Left', orig: 4243.12 },
+    { id: 'univInput', barId: 'univBar', pctId: 'univPct', leftId: 'univLeft', orig: 1558.00 },
+    { id: 'lnInput',   barId: 'lnBar',   pctId: 'lnPct',   leftId: 'lnLeft',   orig: 797.00  },
+    { id: 'bbInput',   barId: 'bbBar',   pctId: 'bbPct',   leftId: 'bbLeft',   orig: 644.00  },
+  ];
+
+  function recalcTotal() {
+    let total = 0;
+    DEBTS.forEach(d => {
+      const el = document.getElementById(d.id);
+      total += parseFloat(el.value) || d.orig;
+    });
+    document.getElementById('totalDebtDisplay').textContent = fmt(total);
+  }
+
+  DEBTS.forEach(d => {
+    const el = document.getElementById(d.id);
+    el.value = get(d.id, d.orig.toString());
+    function update() {
+      const cur = parseFloat(el.value);
+      const balance = isNaN(cur) ? d.orig : cur;
+      const paid = Math.max(0, d.orig - balance);
+      const pct = d.orig > 0 ? Math.min(100, (paid / d.orig) * 100) : 0;
+      document.getElementById(d.barId).style.width = pct + '%';
+      document.getElementById(d.pctId).textContent = pct.toFixed(1) + '% paid off';
+      document.getElementById(d.leftId).textContent = fmt(balance) + ' remaining';
+      recalcTotal();
+    }
+    el.addEventListener('input', () => { set(d.id, el.value); update(); });
+    update();
+  });
+
+  // ── Savings / Emergency fund ──
+  const savEl = document.getElementById('savingsInput');
+  savEl.value = get('savings', '0');
+  function updateSavings() {
+    const v = parseFloat(savEl.value) || 0;
+    const p1 = Math.min(100, (v / 500) * 100);
+    const p2 = Math.min(100, (v / 1000) * 100);
+    document.getElementById('efBar1').style.width = p1 + '%';
+    document.getElementById('efPct1').textContent = p1.toFixed(0) + '% complete';
+    document.getElementById('efLeft1').textContent = v >= 500 ? '✓ Phase 1 done!' : fmt(500 - v) + ' to go';
+    document.getElementById('efBar2').style.width = p2 + '%';
+    document.getElementById('efPct2').textContent = p2.toFixed(0) + '% complete';
+    document.getElementById('efLeft2').textContent = v >= 1000 ? '✓ Goal reached!' : fmt(1000 - v) + ' to go';
+  }
+  savEl.addEventListener('input', () => { set('savings', savEl.value); updateSavings(); });
+  updateSavings();
+
+  // ── Custom goal ──
+  ['goalName','goalTarget','goalCurrent'].forEach(id => {
+    const el = document.getElementById(id);
+    el.value = get(id, '');
+    el.addEventListener('input', () => { set(id, el.value); updateGoal(); });
+  });
+  function updateGoal() {
+    const target = parseFloat(document.getElementById('goalTarget').value) || 0;
+    const current = parseFloat(document.getElementById('goalCurrent').value) || 0;
+    const pct = target > 0 ? Math.min(100, (current / target) * 100) : 0;
+    document.getElementById('goalBar').style.width = pct + '%';
+    document.getElementById('goalPct').textContent = pct.toFixed(0) + '% complete';
+    document.getElementById('goalLeft').textContent = target > 0 && current < target ? fmt(target - current) + ' to go' : target > 0 ? '✓ Done!' : '';
+  }
+  updateGoal();
+
+  // ── Priority checklist ──
+  function loadPri() {
+    const saved = get('pri', null);
+    if (!saved) return;
+    JSON.parse(saved).forEach((on, i) => {
+      if (on) document.querySelectorAll('.pri-row')[i]?.classList.add('done');
+    });
+  }
+  function togglePri(i) {
+    const rows = document.querySelectorAll('.pri-row');
+    rows[i].classList.toggle('done');
+    set('pri', JSON.stringify(Array.from(rows).map(r => r.classList.contains('done'))));
+  }
+  loadPri();
+</script>
+</body>
+</html>
