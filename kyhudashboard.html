@@ -110,6 +110,10 @@
     .row-right { text-align: right; }
     .row-value { font-size: 15px; font-weight: 600; }
 
+    /* ── Tappable bill rows ── */
+    .bill-row { cursor: pointer; transition: background 0.12s; -webkit-tap-highlight-color: transparent; }
+    .bill-row:active { background: var(--card2); }
+
     /* ── Tags ── */
     .tag { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; letter-spacing: 0.03em; }
     .tag-paid { background: rgba(84,84,88,0.3); color: var(--text2); }
@@ -159,6 +163,26 @@
     .sum-row { display: flex; justify-content: space-between; padding: 13px 16px; border-bottom: 1px solid var(--sep); font-size: 15px; }
     .sum-row:last-child { border-bottom: none; }
     .sum-total { font-weight: 700; font-size: 17px; }
+
+    /* ── Spending tracker ── */
+    .exp-header-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; }
+    .exp-total-label { font-size: 13px; color: var(--text2); }
+    .exp-total-amt { font-size: 22px; font-weight: 700; color: var(--red); }
+    .exp-log-btn { background: var(--card2); border: none; border-radius: 8px; color: var(--blue); font-size: 13px; font-weight: 600; padding: 7px 13px; font-family: inherit; cursor: pointer; }
+    .exp-form { display: none; padding: 0 16px 14px; gap: 8px; flex-direction: column; }
+    .exp-form.open { display: flex; }
+    .exp-inputs { display: flex; gap: 8px; }
+    .exp-input { flex: 1; background: var(--card2); border: none; border-radius: 8px; color: var(--text1); font-size: 14px; padding: 9px 12px; outline: none; font-family: inherit; }
+    .exp-input.amt { width: 100px; flex: none; }
+    .exp-input::placeholder { color: var(--text3); }
+    .exp-add-btn { background: var(--blue); border: none; border-radius: 8px; color: #fff; font-size: 14px; font-weight: 600; padding: 9px 16px; font-family: inherit; cursor: pointer; }
+    .exp-item { display: flex; align-items: center; justify-content: space-between; padding: 11px 16px; border-top: 1px solid var(--sep); }
+    .exp-item-left { display: flex; flex-direction: column; gap: 2px; }
+    .exp-item-desc { font-size: 14px; }
+    .exp-item-date { font-size: 12px; color: var(--text3); }
+    .exp-item-right { display: flex; align-items: center; gap: 10px; }
+    .exp-item-amt { font-size: 14px; font-weight: 600; color: var(--red); }
+    .exp-del { background: none; border: none; color: var(--text3); font-size: 20px; line-height: 1; cursor: pointer; padding: 0; }
 
     /* ── Backup buttons ── */
     .backup-row { display: flex; gap: 10px; }
@@ -212,11 +236,11 @@
 
   <div class="sec">Coming Up</div>
   <div class="card">
-    <div class="row"><div><div class="row-label">Spectrum</div><div class="row-sub">Jun 9 · autopay</div></div><div class="row-right"><div class="row-value">$85.00</div><div style="margin-top:4px;"><span class="tag tag-now">DUE NOW</span></div></div></div>
-    <div class="row"><div><div class="row-label">Haircut</div><div class="row-sub">Jun 13 · Friday</div></div><div class="row-right"><div class="row-value">$60.00</div><div style="margin-top:4px;"><span class="tag tag-soon">JUN 13</span></div></div></div>
-    <div class="row"><div><div class="row-label">Spotify</div><div class="row-sub">Jun 14</div></div><div class="row-right"><div class="row-value">$13.77</div><div style="margin-top:4px;"><span class="tag tag-soon">JUN 14</span></div></div></div>
-    <div class="row"><div><div class="row-label">T-Mobile</div><div class="row-sub">Jun 15</div></div><div class="row-right"><div class="row-value">$139.00</div><div style="margin-top:4px;"><span class="tag tag-soon">JUN 15</span></div></div></div>
-    <div class="row"><div><div class="row-label">State Farm Life</div><div class="row-sub">Jun 20</div></div><div class="row-right"><div class="row-value">$32.91</div><div style="margin-top:4px;"><span class="tag tag-upcoming">JUN 20</span></div></div></div>
+    <div class="bill-row row" onclick="toggleBill('spectrum')"><div><div class="row-label">Spectrum</div><div class="row-sub">Jun 9 · autopay</div></div><div class="row-right"><div class="row-value">$85.00</div><div style="margin-top:4px;" id="today-tag-spectrum"><span class="tag tag-now">DUE NOW</span></div></div></div>
+    <div class="bill-row row" onclick="toggleBill('haircut')"><div><div class="row-label">Haircut</div><div class="row-sub">Jun 13 · Friday</div></div><div class="row-right"><div class="row-value">$60.00</div><div style="margin-top:4px;" id="today-tag-haircut"><span class="tag tag-soon">JUN 13</span></div></div></div>
+    <div class="bill-row row" onclick="toggleBill('spotify')"><div><div class="row-label">Spotify</div><div class="row-sub">Jun 14</div></div><div class="row-right"><div class="row-value">$13.77</div><div style="margin-top:4px;" id="today-tag-spotify"><span class="tag tag-soon">JUN 14</span></div></div></div>
+    <div class="bill-row row" onclick="toggleBill('tmobile')"><div><div class="row-label">T-Mobile</div><div class="row-sub">Jun 15</div></div><div class="row-right"><div class="row-value">$139.00</div><div style="margin-top:4px;" id="today-tag-tmobile"><span class="tag tag-soon">JUN 15</span></div></div></div>
+    <div class="bill-row row" onclick="toggleBill('sflife')"><div><div class="row-label">State Farm Life</div><div class="row-sub">Jun 20</div></div><div class="row-right"><div class="row-value">$32.91</div><div style="margin-top:4px;" id="today-tag-sflife"><span class="tag tag-upcoming">JUN 20</span></div></div></div>
   </div>
 
   <div class="sec">Income This Week</div>
@@ -228,8 +252,30 @@
     <div class="row" style="background:rgba(48,209,88,0.04);"><div class="row-label" style="font-weight:600;">After bills</div><div class="row-value" style="color:var(--green);font-weight:700;">~$433</div></div>
   </div>
 
+  <div class="sec">This Month's Spending</div>
+  <div class="card">
+    <div class="exp-header-row">
+      <div><div class="exp-total-label">logged this month</div><div class="exp-total-amt" id="expTotal">$0.00</div></div>
+      <button class="exp-log-btn" onclick="toggleExpForm()">+ Log</button>
+    </div>
+    <div class="exp-form" id="expForm">
+      <div class="exp-inputs">
+        <input class="exp-input" id="expDesc" type="text" placeholder="what was it" />
+        <input class="exp-input amt" id="expAmt" type="number" step="0.01" placeholder="$0.00" />
+      </div>
+      <button class="exp-add-btn" onclick="addExpense()">Add</button>
+    </div>
+    <div id="expList"></div>
+  </div>
+
   <div class="sec">Today's Notes</div>
   <div class="card"><textarea class="notes-area" id="notesArea" placeholder="What's the plan today?"></textarea></div>
+
+  <div class="sec">Data Backup</div>
+  <div class="backup-row">
+    <button class="backup-btn" onclick="exportData()">Export Backup</button>
+    <button class="backup-btn import" onclick="document.getElementById('importFile').click()">Restore Backup</button>
+  </div>
 
   <div class="sec">Upload Statement</div>
   <div id="tokenSetup" style="display:none;" class="card" onclick="event.stopPropagation()">
@@ -241,9 +287,7 @@
   </div>
   <div class="backup-row">
     <button class="backup-btn" id="uploadStatementBtn" onclick="triggerUpload()" style="color:var(--blue);">Upload Statement</button>
-    <button class="backup-btn" onclick="exportData()">Export Backup</button>
   </div>
-  <button class="backup-btn import" onclick="document.getElementById('importFile').click()" style="width:100%;margin-top:10px;">Restore Backup</button>
   <input type="file" id="statementFile" accept="image/*,.pdf,.csv" style="display:none" onchange="uploadStatement(event)">
   <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
   <div class="backup-toast" id="backupToast"></div>
@@ -316,34 +360,38 @@
 <!-- ══ BILLS ══ -->
 <div class="panel" id="tab-bills">
   <div class="page-title">Bills</div>
-  <div class="page-sub">June 2026</div>
+  <div class="page-sub">June 2026 · tap to mark paid</div>
 
   <div class="sec">This Month</div>
   <div class="card">
-    <div class="row"><div><div class="row-label">State Farm Auto</div><div class="row-sub">Paid Jun 4</div></div><div class="row-right"><div class="row-value" style="color:var(--text2);">$119.81</div><div style="margin-top:4px;"><span class="tag tag-paid">PAID ✓</span></div></div></div>
-    <div class="row"><div><div class="row-label">Spectrum</div><div class="row-sub">Jun 9 · autopay</div></div><div class="row-right"><div class="row-value">$85.00</div><div style="margin-top:4px;"><span class="tag tag-now">DUE NOW</span></div></div></div>
-    <div class="row"><div><div class="row-label">Spotify</div><div class="row-sub">~Jun 14 · autopay</div></div><div class="row-right"><div class="row-value">$13.77</div><div style="margin-top:4px;"><span class="tag tag-soon">JUN 14</span></div></div></div>
-    <div class="row"><div><div class="row-label">T-Mobile</div><div class="row-sub">~Jun 15 · autopay</div></div><div class="row-right"><div class="row-value">$139.00</div><div style="margin-top:4px;"><span class="tag tag-soon">JUN 15</span></div></div></div>
-    <div class="row"><div><div class="row-label">State Farm Life</div><div class="row-sub">~Jun 20</div></div><div class="row-right"><div class="row-value">$32.91</div><div style="margin-top:4px;"><span class="tag tag-upcoming">JUN 20</span></div></div></div>
-    <div class="row"><div><div class="row-label">Planet Fitness</div><div class="row-sub">Black Card · recurring</div></div><div class="row-right"><div class="row-value">$24.99</div><div style="margin-top:4px;"><span class="tag tag-upcoming">MONTHLY</span></div></div></div>
-    <div class="row"><div><div class="row-label">Haircut</div><div class="row-sub">Every 2 weeks · $60/cut</div></div><div class="row-right"><div class="row-value">$120.00</div><div style="margin-top:4px;"><span class="tag tag-soon">JUN 13</span></div></div></div>
+    <div class="bill-row row" onclick="toggleBill('sfauto')"><div><div class="row-label">State Farm Auto</div><div class="row-sub">Paid Jun 4</div></div><div class="row-right"><div class="row-value" style="color:var(--text2);">$119.81</div><div style="margin-top:4px;" id="bills-tag-sfauto"><span class="tag tag-paid">PAID ✓</span></div></div></div>
+    <div class="bill-row row" onclick="toggleBill('spectrum')"><div><div class="row-label">Spectrum</div><div class="row-sub">Jun 9 · autopay</div></div><div class="row-right"><div class="row-value">$85.00</div><div style="margin-top:4px;" id="bills-tag-spectrum"><span class="tag tag-now">DUE NOW</span></div></div></div>
+    <div class="bill-row row" onclick="toggleBill('haircut')"><div><div class="row-label">Haircut</div><div class="row-sub">Every 2 weeks · $60/cut</div></div><div class="row-right"><div class="row-value">$120.00</div><div style="margin-top:4px;" id="bills-tag-haircut"><span class="tag tag-soon">JUN 13</span></div></div></div>
+    <div class="bill-row row" onclick="toggleBill('spotify')"><div><div class="row-label">Spotify</div><div class="row-sub">~Jun 14 · autopay</div></div><div class="row-right"><div class="row-value">$13.77</div><div style="margin-top:4px;" id="bills-tag-spotify"><span class="tag tag-soon">JUN 14</span></div></div></div>
+    <div class="bill-row row" onclick="toggleBill('tmobile')"><div><div class="row-label">T-Mobile</div><div class="row-sub">~Jun 15 · autopay</div></div><div class="row-right"><div class="row-value">$139.00</div><div style="margin-top:4px;" id="bills-tag-tmobile"><span class="tag tag-soon">JUN 15</span></div></div></div>
+    <div class="bill-row row" onclick="toggleBill('sflife')"><div><div class="row-label">State Farm Life</div><div class="row-sub">~Jun 20</div></div><div class="row-right"><div class="row-value">$32.91</div><div style="margin-top:4px;" id="bills-tag-sflife"><span class="tag tag-upcoming">JUN 20</span></div></div></div>
+    <div class="bill-row row" onclick="toggleBill('planetfit')"><div><div class="row-label">Planet Fitness</div><div class="row-sub">Black Card · recurring</div></div><div class="row-right"><div class="row-value">$24.99</div><div style="margin-top:4px;" id="bills-tag-planetfit"><span class="tag tag-upcoming">MONTHLY</span></div></div></div>
+    <div class="bill-row row" onclick="toggleBill('qsmin')"><div><div class="row-label">Quicksilver — Min Payment</div><div class="row-sub">Capital One · due monthly</div></div><div class="row-right"><div class="row-value">$322.00</div><div style="margin-top:4px;" id="bills-tag-qsmin"><span class="tag tag-upcoming">MONTHLY</span></div></div></div>
+    <div class="bill-row row" onclick="toggleBill('somin')"><div><div class="row-label">SavorOne — Min Payment</div><div class="row-sub">Capital One · due monthly</div></div><div class="row-right"><div class="row-value">$481.00</div><div style="margin-top:4px;" id="bills-tag-somin"><span class="tag tag-upcoming">MONTHLY</span></div></div></div>
   </div>
 
   <div class="sec">Monthly Summary</div>
   <div class="card">
     <div class="sum-row"><span>Already Paid</span><span style="color:var(--green);">$119.81</span></div>
-    <div class="sum-row"><span>Still Owed</span><span style="color:var(--orange);">~$575.67</span></div>
-    <div class="sum-row sum-total" style="background:rgba(255,69,58,0.04);"><span>June Total</span><span style="color:var(--red);">~$535.48</span></div>
+    <div class="sum-row"><span>Still Owed</span><span style="color:var(--orange);">~$1,218.67</span></div>
+    <div class="sum-row sum-total" style="background:rgba(255,69,58,0.04);"><span>June Total</span><span style="color:var(--red);">~$1,338.48</span></div>
   </div>
 
   <div class="sec">Due Dates</div>
   <div class="card">
-    <div class="row"><div class="row-label">State Farm Auto</div><div style="color:var(--text2);font-size:14px;">3rd-4th</div></div>
+    <div class="row"><div class="row-label">State Farm Auto</div><div style="color:var(--text2);font-size:14px;">3rd–4th</div></div>
     <div class="row"><div class="row-label">Spectrum</div><div style="color:var(--text2);font-size:14px;">9th · autopay</div></div>
+    <div class="row"><div class="row-label">Haircut</div><div style="color:var(--text2);font-size:14px;">every 2 weeks</div></div>
     <div class="row"><div class="row-label">Spotify</div><div style="color:var(--text2);font-size:14px;">~14th</div></div>
     <div class="row"><div class="row-label">T-Mobile</div><div style="color:var(--text2);font-size:14px;">~15th</div></div>
-    <div class="row"><div class="row-label">State Farm Life</div><div style="color:var(--text2);font-size:14px;">19th-20th</div></div>
-    <div class="row"><div class="row-label">Haircut</div><div style="color:var(--text2);font-size:14px;">every 2 weeks</div></div>
+    <div class="row"><div class="row-label">State Farm Life</div><div style="color:var(--text2);font-size:14px;">19th–20th</div></div>
+    <div class="row"><div class="row-label">Quicksilver Min</div><div style="color:var(--text2);font-size:14px;">monthly</div></div>
+    <div class="row"><div class="row-label">SavorOne Min</div><div style="color:var(--text2);font-size:14px;">monthly</div></div>
   </div>
 </div>
 
@@ -354,35 +402,37 @@
 
   <div class="stat-row">
     <div class="stat-card"><div class="stat-label">Income</div><div class="stat-val" style="color:var(--green);font-size:22px;">$3,155</div><div class="stat-sub">UPS + DoorDash</div></div>
-    <div class="stat-card"><div class="stat-label">Bills</div><div class="stat-val" style="color:var(--red);font-size:22px;">$535</div><div class="stat-sub">All recurring</div></div>
-    <div class="stat-card full"><div class="stat-label">Left Over</div><div class="stat-val" style="color:var(--green);">~$1,970</div><div class="stat-sub">After bills + food + gas</div></div>
+    <div class="stat-card"><div class="stat-label">Bills</div><div class="stat-val" style="color:var(--red);font-size:22px;">$1,338</div><div class="stat-sub">All recurring</div></div>
+    <div class="stat-card full"><div class="stat-label">Left Over</div><div class="stat-val" style="color:var(--green);">~$1,167</div><div class="stat-sub">After bills + food + gas</div></div>
   </div>
 
   <div class="sec">Income</div>
   <div class="card">
     <div class="row"><div><div class="row-label">UPS Payroll</div><div class="row-sub">~$500/wk x 4.33</div></div><div class="row-value" style="color:var(--green);">+$2,167</div></div>
-    <div class="row"><div><div class="row-label">DoorDash</div><div class="row-sub">Fri-Mon · ~12 hrs/wk</div></div><div class="row-value" style="color:var(--green);">+$988</div></div>
+    <div class="row"><div><div class="row-label">DoorDash</div><div class="row-sub">Fri–Mon · ~12 hrs/wk</div></div><div class="row-value" style="color:var(--green);">+$988</div></div>
     <div class="row" style="background:rgba(48,209,88,0.05);"><div class="row-label" style="font-weight:700;">Total</div><div class="row-value" style="color:var(--green);font-size:17px;">$3,155</div></div>
   </div>
 
   <div class="sec">Bills Breakdown</div>
   <div class="card">
+    <div class="row"><div class="row-label">SavorOne Min</div><div class="row-value" style="color:var(--red);">-$481.00</div></div>
+    <div class="row"><div class="row-label">Quicksilver Min</div><div class="row-value" style="color:var(--red);">-$322.00</div></div>
     <div class="row"><div class="row-label">T-Mobile</div><div class="row-value" style="color:var(--red);">-$139.00</div></div>
+    <div class="row"><div class="row-label">Haircut</div><div class="row-value" style="color:var(--red);">-$120.00</div></div>
     <div class="row"><div class="row-label">State Farm Auto</div><div class="row-value" style="color:var(--red);">-$119.81</div></div>
     <div class="row"><div class="row-label">Spectrum</div><div class="row-value" style="color:var(--red);">-$85.00</div></div>
     <div class="row"><div class="row-label">State Farm Life</div><div class="row-value" style="color:var(--red);">-$32.91</div></div>
     <div class="row"><div class="row-label">Planet Fitness</div><div class="row-value" style="color:var(--red);">-$24.99</div></div>
     <div class="row"><div class="row-label">Spotify</div><div class="row-value" style="color:var(--red);">-$13.77</div></div>
-    <div class="row"><div class="row-label">Haircut</div><div class="row-value" style="color:var(--red);">-$120.00</div></div>
-    <div class="row" style="background:rgba(255,69,58,0.04);"><div class="row-label" style="font-weight:700;">Total</div><div class="row-value" style="color:var(--red);font-size:17px;">-$535.48</div></div>
+    <div class="row" style="background:rgba(255,69,58,0.04);"><div class="row-label" style="font-weight:700;">Total</div><div class="row-value" style="color:var(--red);font-size:17px;">-$1,338.48</div></div>
   </div>
 
   <div class="sec">Bottom Line</div>
   <div class="card">
     <div class="row"><div class="row-label">Income</div><div class="row-value" style="color:var(--green);">+$3,155</div></div>
-    <div class="row"><div class="row-label">Bills</div><div class="row-value" style="color:var(--red);">-$535</div></div>
+    <div class="row"><div class="row-label">Bills</div><div class="row-value" style="color:var(--red);">-$1,338</div></div>
     <div class="row"><div class="row-label">Food + Gas</div><div class="row-value" style="color:var(--red);">-$650</div></div>
-    <div class="row" style="background:rgba(48,209,88,0.07);"><div><div class="row-label" style="font-weight:700;">Left for Savings &amp; Debt</div><div class="row-sub">per month</div></div><div class="row-value" style="color:var(--green);font-size:20px;font-weight:700;">~$1,970</div></div>
+    <div class="row" style="background:rgba(48,209,88,0.07);"><div><div class="row-label" style="font-weight:700;">Left for Savings &amp; Debt</div><div class="row-sub">per month</div></div><div class="row-value" style="color:var(--green);font-size:20px;font-weight:700;">~$1,167</div></div>
   </div>
 </div>
 
@@ -491,6 +541,92 @@
   notesEl.value=get('notes_'+today,'');
   notesEl.addEventListener('input',()=>set('notes_'+today,notesEl.value));
 
+  // ── Bill toggle ──
+  const BILL_DEFAULTS = {
+    sfauto:   { tag:'tag-paid',     text:'PAID ✓' },
+    spectrum: { tag:'tag-now',      text:'DUE NOW' },
+    haircut:  { tag:'tag-soon',     text:'JUN 13' },
+    spotify:  { tag:'tag-soon',     text:'JUN 14' },
+    tmobile:  { tag:'tag-soon',     text:'JUN 15' },
+    sflife:   { tag:'tag-upcoming', text:'JUN 20' },
+    planetfit:{ tag:'tag-upcoming', text:'MONTHLY' },
+    qsmin:    { tag:'tag-upcoming', text:'MONTHLY' },
+    somin:    { tag:'tag-upcoming', text:'MONTHLY' },
+  };
+  const billMonth = now.toISOString().slice(0,7);
+  function getPaidBills(){ return JSON.parse(get('bills_'+billMonth,'[]')); }
+  function savePaidBills(arr){ set('bills_'+billMonth, JSON.stringify(arr)); }
+  function toggleBill(key){
+    const paid = getPaidBills();
+    const idx = paid.indexOf(key);
+    if(idx >= 0) paid.splice(idx,1); else paid.push(key);
+    savePaidBills(paid);
+    renderBillTags();
+  }
+  function renderBillTags(){
+    const paid = getPaidBills();
+    Object.keys(BILL_DEFAULTS).forEach(key => {
+      const isPaid = paid.includes(key);
+      const tagClass = isPaid ? 'tag-paid' : BILL_DEFAULTS[key].tag;
+      const tagText  = isPaid ? 'PAID ✓'   : BILL_DEFAULTS[key].text;
+      const html = `<span class="tag ${tagClass}">${tagText}</span>`;
+      const bEl = document.getElementById('bills-tag-'+key);
+      const tEl = document.getElementById('today-tag-'+key);
+      if(bEl) bEl.innerHTML = html;
+      if(tEl) tEl.innerHTML = html;
+    });
+  }
+  renderBillTags();
+
+  // ── Spending tracker ──
+  const spendMonth = now.toISOString().slice(0,7);
+  function getSpending(){ return JSON.parse(get('spending_'+spendMonth,'[]')); }
+  function saveSpending(arr){ set('spending_'+spendMonth, JSON.stringify(arr)); }
+  function toggleExpForm(){
+    const f = document.getElementById('expForm');
+    f.classList.toggle('open');
+    if(f.classList.contains('open')) document.getElementById('expDesc').focus();
+  }
+  function addExpense(){
+    const desc = document.getElementById('expDesc').value.trim();
+    const amt  = parseFloat(document.getElementById('expAmt').value);
+    if(!desc || isNaN(amt) || amt <= 0) return;
+    const arr = getSpending();
+    const d = now.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    arr.unshift({desc, amount: amt, date: d});
+    saveSpending(arr);
+    document.getElementById('expDesc').value='';
+    document.getElementById('expAmt').value='';
+    document.getElementById('expForm').classList.remove('open');
+    renderSpending();
+  }
+  function deleteExpense(idx){
+    const arr = getSpending();
+    arr.splice(idx,1);
+    saveSpending(arr);
+    renderSpending();
+  }
+  function renderSpending(){
+    const arr = getSpending();
+    const total = arr.reduce((s,e)=>s+e.amount,0);
+    document.getElementById('expTotal').textContent='$'+total.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+    const list = document.getElementById('expList');
+    if(arr.length===0){list.innerHTML='';return;}
+    list.innerHTML = arr.map((e,i)=>`
+      <div class="exp-item">
+        <div class="exp-item-left">
+          <span class="exp-item-desc">${e.desc}</span>
+          <span class="exp-item-date">${e.date}</span>
+        </div>
+        <div class="exp-item-right">
+          <span class="exp-item-amt">-$${e.amount.toFixed(2)}</span>
+          <button class="exp-del" onclick="deleteExpense(${i})">×</button>
+        </div>
+      </div>`).join('');
+  }
+  renderSpending();
+
+  // ── Upload / backup ──
   function triggerUpload(){
     if(!localStorage.getItem('fin2_upload_token')){
       document.getElementById('tokenSetup').style.display='block';
@@ -530,7 +666,6 @@
     reader.readAsDataURL(file);
     e.target.value='';
   }
-
   function showToast(msg){
     const t=document.getElementById('backupToast');
     t.textContent=msg;t.style.opacity='1';
@@ -561,6 +696,9 @@
     reader.readAsText(file);
     e.target.value='';
   }
+
+  // Enter to add expense
+  document.getElementById('expAmt').addEventListener('keydown', e => { if(e.key==='Enter') addExpense(); });
 </script>
 </body>
 </html>
