@@ -164,26 +164,6 @@
     .sum-row:last-child { border-bottom: none; }
     .sum-total { font-weight: 700; font-size: 17px; }
 
-    /* ── Spending tracker ── */
-    .exp-header-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; }
-    .exp-total-label { font-size: 13px; color: var(--text2); }
-    .exp-total-amt { font-size: 22px; font-weight: 700; color: var(--red); }
-    .exp-log-btn { background: var(--card2); border: none; border-radius: 8px; color: var(--blue); font-size: 13px; font-weight: 600; padding: 7px 13px; font-family: inherit; cursor: pointer; }
-    .exp-form { display: none; padding: 0 16px 14px; gap: 8px; flex-direction: column; }
-    .exp-form.open { display: flex; }
-    .exp-inputs { display: flex; gap: 8px; }
-    .exp-input { flex: 1; background: var(--card2); border: none; border-radius: 8px; color: var(--text1); font-size: 14px; padding: 9px 12px; outline: none; font-family: inherit; }
-    .exp-input.amt { width: 100px; flex: none; }
-    .exp-input::placeholder { color: var(--text3); }
-    .exp-add-btn { background: var(--blue); border: none; border-radius: 8px; color: #fff; font-size: 14px; font-weight: 600; padding: 9px 16px; font-family: inherit; cursor: pointer; }
-    .exp-item { display: flex; align-items: center; justify-content: space-between; padding: 11px 16px; border-top: 1px solid var(--sep); }
-    .exp-item-left { display: flex; flex-direction: column; gap: 2px; }
-    .exp-item-desc { font-size: 14px; }
-    .exp-item-date { font-size: 12px; color: var(--text3); }
-    .exp-item-right { display: flex; align-items: center; gap: 10px; }
-    .exp-item-amt { font-size: 14px; font-weight: 600; color: var(--red); }
-    .exp-del { background: none; border: none; color: var(--text3); font-size: 20px; line-height: 1; cursor: pointer; padding: 0; }
-
     /* ── Backup buttons ── */
     .backup-row { display: flex; gap: 10px; }
     .backup-btn { flex: 1; background: var(--card2); border: none; border-radius: 10px; color: var(--text1); font-size: 14px; font-weight: 600; padding: 13px 10px; font-family: inherit; cursor: pointer; transition: background 0.15s; }
@@ -221,6 +201,16 @@
       <div class="stat-val" style="color:var(--green);font-size:22px;" id="efStatVal">$0.00</div>
       <div class="stat-sub" id="efStatSub">$500 to go</div>
     </div>
+    <div class="stat-card">
+      <div class="stat-label">Gas This Month</div>
+      <div class="stat-val" style="color:var(--orange);font-size:22px;" id="gasStatVal">$0.00</div>
+      <div class="stat-sub" id="gasStatSub">from statements</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Spent</div>
+      <div class="stat-val" style="color:var(--red);font-size:22px;" id="spendStatVal">$0.00</div>
+      <div class="stat-sub" id="spendStatSub">non-bill this month</div>
+    </div>
   </div>
 
   <div class="card">
@@ -250,22 +240,6 @@
     <div class="row" style="background:rgba(48,209,88,0.05);"><div class="row-label" style="font-weight:700;">Total</div><div class="row-value" style="color:var(--green);font-size:17px;">~$646</div></div>
     <div class="row" style="background:rgba(255,69,58,0.04);"><div class="row-label" style="color:var(--text2);">Bills (Haircut · Spotify · T-Mobile)</div><div class="row-value" style="color:var(--red);">-$212.77</div></div>
     <div class="row" style="background:rgba(48,209,88,0.04);"><div class="row-label" style="font-weight:600;">After bills</div><div class="row-value" style="color:var(--green);font-weight:700;">~$433</div></div>
-  </div>
-
-  <div class="sec">This Month's Spending</div>
-  <div class="card">
-    <div class="exp-header-row">
-      <div><div class="exp-total-label">logged this month</div><div class="exp-total-amt" id="expTotal">$0.00</div></div>
-      <button class="exp-log-btn" onclick="toggleExpForm()">+ Log</button>
-    </div>
-    <div class="exp-form" id="expForm">
-      <div class="exp-inputs">
-        <input class="exp-input" id="expDesc" type="text" placeholder="what was it" />
-        <input class="exp-input amt" id="expAmt" type="number" step="0.01" placeholder="$0.00" />
-      </div>
-      <button class="exp-add-btn" onclick="addExpense()">Add</button>
-    </div>
-    <div id="expList"></div>
   </div>
 
   <div class="sec">Today's Notes</div>
@@ -436,6 +410,40 @@
   </div>
 </div>
 
+<!-- ══ REPORTS ══ -->
+<div class="panel" id="tab-reports">
+  <div class="page-title">Reports</div>
+  <div class="page-sub" id="reportMonthSub">June 2026</div>
+
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-label">Total Spent</div>
+      <div class="stat-val" style="color:var(--red);font-size:22px;" id="rpt-total">$0.00</div>
+      <div class="stat-sub">non-bill this month</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Gas</div>
+      <div class="stat-val" style="color:var(--orange);font-size:22px;" id="rpt-gas">$0.00</div>
+      <div class="stat-sub" id="rpt-gas-sub">0 fill-ups</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Food &amp; Dining</div>
+      <div class="stat-val" style="color:var(--purple);font-size:22px;" id="rpt-food">$0.00</div>
+      <div class="stat-sub">restaurants &amp; groceries</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Other</div>
+      <div class="stat-val" style="color:var(--text2);font-size:22px;" id="rpt-other">$0.00</div>
+      <div class="stat-sub">everything else</div>
+    </div>
+  </div>
+
+  <div class="sec">Transactions</div>
+  <div class="card" id="rpt-txlist">
+    <div class="row" style="justify-content:center;color:var(--text3);font-size:14px;padding:24px 16px;">Upload a statement to populate</div>
+  </div>
+</div>
+
 </main>
 
 <!-- Bottom Nav -->
@@ -455,6 +463,10 @@
   <button class="nav-btn" id="nav-budget" onclick="showTab('budget',this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
     Budget
+  </button>
+  <button class="nav-btn" id="nav-reports" onclick="showTab('reports',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    Reports
   </button>
 </nav>
 
@@ -578,53 +590,49 @@
   }
   renderBillTags();
 
-  // ── Spending tracker ──
-  const spendMonth = now.toISOString().slice(0,7);
-  function getSpending(){ return JSON.parse(get('spending_'+spendMonth,'[]')); }
-  function saveSpending(arr){ set('spending_'+spendMonth, JSON.stringify(arr)); }
-  function toggleExpForm(){
-    const f = document.getElementById('expForm');
-    f.classList.toggle('open');
-    if(f.classList.contains('open')) document.getElementById('expDesc').focus();
-  }
-  function addExpense(){
-    const desc = document.getElementById('expDesc').value.trim();
-    const amt  = parseFloat(document.getElementById('expAmt').value);
-    if(!desc || isNaN(amt) || amt <= 0) return;
-    const arr = getSpending();
-    const d = now.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    arr.unshift({desc, amount: amt, date: d});
-    saveSpending(arr);
-    document.getElementById('expDesc').value='';
-    document.getElementById('expAmt').value='';
-    document.getElementById('expForm').classList.remove('open');
-    renderSpending();
-  }
-  function deleteExpense(idx){
-    const arr = getSpending();
-    arr.splice(idx,1);
-    saveSpending(arr);
-    renderSpending();
-  }
-  function renderSpending(){
-    const arr = getSpending();
-    const total = arr.reduce((s,e)=>s+e.amount,0);
-    document.getElementById('expTotal').textContent='$'+total.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-    const list = document.getElementById('expList');
-    if(arr.length===0){list.innerHTML='';return;}
-    list.innerHTML = arr.map((e,i)=>`
-      <div class="exp-item">
-        <div class="exp-item-left">
-          <span class="exp-item-desc">${e.desc}</span>
-          <span class="exp-item-date">${e.date}</span>
+  // ── Spending data (populated by statement processor) ──
+  const spendMonthKey = now.toISOString().slice(0,7);
+  function loadSpendingData() {
+    const gas = parseFloat(get('gas_'+spendMonthKey, '0'));
+    const total = parseFloat(get('totalspend_'+spendMonthKey, '0'));
+    const txRaw = get('transactions_'+spendMonthKey, '[]');
+    let txList = [];
+    try { txList = JSON.parse(txRaw); } catch(e) {}
+
+    // Today tab
+    document.getElementById('gasStatVal').textContent = '$'+gas.toFixed(2);
+    document.getElementById('gasStatSub').textContent = gas > 0 ? 'this month' : 'from statements';
+    document.getElementById('spendStatVal').textContent = '$'+total.toFixed(2);
+    document.getElementById('spendStatSub').textContent = total > 0 ? 'non-bill this month' : 'from statements';
+
+    // Reports tab
+    document.getElementById('rpt-total').textContent = '$'+total.toFixed(2);
+    document.getElementById('rpt-gas').textContent = '$'+gas.toFixed(2);
+    const food = parseFloat(get('food_'+spendMonthKey, '0'));
+    const other = parseFloat(get('other_'+spendMonthKey, '0'));
+    document.getElementById('rpt-food').textContent = '$'+food.toFixed(2);
+    document.getElementById('rpt-other').textContent = '$'+other.toFixed(2);
+    const gasCount = txList.filter(t=>t.cat==='gas').length;
+    document.getElementById('rpt-gas-sub').textContent = gasCount > 0 ? gasCount+' fill-up'+(gasCount===1?'':'s') : 'no fill-ups yet';
+    const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    document.getElementById('reportMonthSub').textContent = MONTHS_SHORT[now.getMonth()]+' '+now.getFullYear();
+
+    const listEl = document.getElementById('rpt-txlist');
+    if(txList.length === 0) {
+      listEl.innerHTML = '<div class="row" style="justify-content:center;color:var(--text3);font-size:14px;padding:24px 16px;">Upload a statement to populate</div>';
+      return;
+    }
+    const catColor = {gas:'var(--orange)', food:'var(--purple)', bill:'var(--text2)', other:'var(--text1)'};
+    listEl.innerHTML = txList.map(t=>`
+      <div class="row">
+        <div>
+          <div class="row-label">${t.desc}</div>
+          <div class="row-sub">${t.date} · ${t.cat}</div>
         </div>
-        <div class="exp-item-right">
-          <span class="exp-item-amt">-$${e.amount.toFixed(2)}</span>
-          <button class="exp-del" onclick="deleteExpense(${i})">×</button>
-        </div>
+        <div class="row-value" style="color:${catColor[t.cat]||'var(--text1)'};">-$${Math.abs(t.amt).toFixed(2)}</div>
       </div>`).join('');
   }
-  renderSpending();
+  loadSpendingData();
 
   // ── Upload / backup ──
   function triggerUpload(){
@@ -697,8 +705,7 @@
     e.target.value='';
   }
 
-  // Enter to add expense
-  document.getElementById('expAmt').addEventListener('keydown', e => { if(e.key==='Enter') addExpense(); });
+
 </script>
 </body>
 </html>
