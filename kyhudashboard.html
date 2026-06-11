@@ -28,6 +28,18 @@
     input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
     input[type="number"] { -moz-appearance: textfield; }
 
+    /* ── Refresh button ── */
+    .refresh-btn {
+      position: fixed; top: 14px; right: 16px;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--card2); border: none;
+      color: var(--text2); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 200; transition: background 0.15s;
+    }
+    .refresh-btn:active { background: var(--card3); }
+    .refresh-btn svg { width: 16px; height: 16px; }
+
     /* ── Bottom Nav ── */
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
@@ -157,6 +169,10 @@
   </style>
 </head>
 <body>
+
+<button class="refresh-btn" onclick="location.reload()" title="Refresh">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+</button>
 
 <main class="main">
 
