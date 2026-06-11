@@ -231,11 +231,20 @@
   <div class="sec">Today's Notes</div>
   <div class="card"><textarea class="notes-area" id="notesArea" placeholder="What's the plan today?"></textarea></div>
 
-  <div class="sec">Data Backup</div>
-  <div class="backup-row">
-    <button class="backup-btn" onclick="exportData()">Export Backup</button>
-    <button class="backup-btn import" onclick="document.getElementById('importFile').click()">Restore Backup</button>
+  <div class="sec">Upload Statement</div>
+  <div id="tokenSetup" style="display:none;" class="card" onclick="event.stopPropagation()">
+    <div style="padding:16px;">
+      <div style="font-size:13px;color:var(--text2);margin-bottom:10px;">Enter your upload token once to enable statement uploads.</div>
+      <input id="tokenInput" type="password" placeholder="Paste token here" style="width:100%;background:var(--card2);border:none;border-radius:8px;color:var(--text1);font-size:14px;padding:10px 12px;outline:none;font-family:inherit;margin-bottom:10px;" />
+      <button onclick="saveToken()" style="width:100%;background:var(--blue);border:none;border-radius:8px;color:#fff;font-size:14px;font-weight:600;padding:11px;font-family:inherit;cursor:pointer;">Save Token</button>
+    </div>
   </div>
+  <div class="backup-row">
+    <button class="backup-btn" id="uploadStatementBtn" onclick="triggerUpload()" style="color:var(--blue);">Upload Statement</button>
+    <button class="backup-btn" onclick="exportData()">Export Backup</button>
+  </div>
+  <button class="backup-btn import" onclick="document.getElementById('importFile').click()" style="width:100%;margin-top:10px;">Restore Backup</button>
+  <input type="file" id="statementFile" accept="image/*,.pdf,.csv" style="display:none" onchange="uploadStatement(event)">
   <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
   <div class="backup-toast" id="backupToast"></div>
 </div>
@@ -481,6 +490,46 @@
   const today=now.toISOString().split('T')[0];
   notesEl.value=get('notes_'+today,'');
   notesEl.addEventListener('input',()=>set('notes_'+today,notesEl.value));
+
+  function triggerUpload(){
+    if(!localStorage.getItem('fin2_upload_token')){
+      document.getElementById('tokenSetup').style.display='block';
+    } else {
+      document.getElementById('statementFile').click();
+    }
+  }
+  function saveToken(){
+    const t=document.getElementById('tokenInput').value.trim();
+    if(!t){showToast('Token cannot be empty.');return;}
+    localStorage.setItem('fin2_upload_token',t);
+    document.getElementById('tokenSetup').style.display='none';
+    document.getElementById('tokenInput').value='';
+    showToast('Token saved. Tap Upload Statement to continue.');
+  }
+  function uploadStatement(e){
+    const file=e.target.files[0];if(!file)return;
+    const token=localStorage.getItem('fin2_upload_token');
+    if(!token){showToast('No token found.');return;}
+    showToast('Uploading...');
+    const reader=new FileReader();
+    reader.onload=async function(ev){
+      const b64=ev.target.result.split(',')[1];
+      const ts=new Date().toISOString().replace(/[:.]/g,'-');
+      const ext=file.name.split('.').pop();
+      const filename='uploads/statement-'+ts+'.'+ext;
+      try{
+        const res=await fetch('https://api.github.com/repos/kobe2456/kyhu-uploads/contents/'+filename,{
+          method:'PUT',
+          headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+          body:JSON.stringify({message:'statement upload '+ts,content:b64})
+        });
+        if(res.ok){showToast('Uploaded. Dashboard will update shortly.');}
+        else{const j=await res.json();showToast('Upload failed: '+(j.message||res.status));}
+      }catch(err){showToast('Upload error. Check connection.');}
+    };
+    reader.readAsDataURL(file);
+    e.target.value='';
+  }
 
   function showToast(msg){
     const t=document.getElementById('backupToast');
