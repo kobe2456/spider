@@ -29,7 +29,7 @@
       background: var(--bg);
       color: var(--text1);
       min-height: 100vh;
-      padding-bottom: calc(100px + env(safe-area-inset-bottom));
+      padding-bottom: 90px;
       overflow-x: hidden;
     }
     ::-webkit-scrollbar { width: 0; }
@@ -103,42 +103,42 @@
       position: fixed;
       bottom: 0; left: 0; right: 0;
       z-index: 100;
-      background: rgba(10,10,15,0.96);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      background: rgba(13,13,20,0.97);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-top: 1px solid var(--sep);
-      padding: 10px 8px calc(14px + env(safe-area-inset-bottom)) 8px;
+      padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
       display: flex;
       justify-content: space-around;
-      align-items: flex-start;
     }
     .nav-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px;
-      padding: 8px 14px 6px;
-      border-radius: 14px;
+      gap: 4px;
+      padding: 4px 12px;
+      border-radius: 12px;
       cursor: pointer;
       border: none;
       background: none;
-      color: rgba(235,235,245,0.35);
+      color: var(--text3);
       font-size: 10px;
       font-weight: 600;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
       text-transform: uppercase;
-      transition: color 0.18s, background 0.18s;
-      min-width: 64px;
-      -webkit-tap-highlight-color: transparent;
-      position: relative;
+      transition: color 0.15s;
     }
-    .nav-item svg { width: 24px; height: 24px; transition: filter 0.18s; }
-    .nav-item.active {
-      color: var(--red2);
-      background: rgba(255,79,68,0.1);
-    }
-    .nav-item.active svg {
-      filter: drop-shadow(0 0 6px rgba(255,79,68,0.7));
+    .nav-item svg { width: 22px; height: 22px; }
+    .nav-item.active { color: var(--red2); }
+    .nav-item.active svg { filter: drop-shadow(0 0 8px rgba(255,79,68,0.9)); }
+    .nav-item.active::after {
+      content: '';
+      display: block;
+      width: 20px; height: 3px;
+      background: var(--red2);
+      border-radius: 2px;
+      margin-top: 2px;
+      box-shadow: 0 0 8px rgba(255,79,68,0.8);
     }
 
     /* ── Panels ── */
@@ -456,6 +456,228 @@
       z-index: 0;
       opacity: 0.08;
     }
+
+    /* ── Refresh Button ── */
+    .refresh-btn {
+      position: fixed;
+      top: 56px;
+      right: 16px;
+      z-index: 200;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(19,19,26,0.95);
+      border: 1px solid var(--sep);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .refresh-btn:active { opacity: 0.7; }
+    .refresh-btn svg { width: 18px; height: 18px; color: var(--text2); }
+
+    /* ── Custom Numpad ── */
+    #numpadBackdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: rgba(0,0,0,0.55);
+    }
+    #numpadBackdrop.open { display: block; }
+    #numpadSheet {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 501;
+      background: rgba(18,18,26,0.97);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border-top: 1px solid rgba(230,50,40,0.4);
+      border-radius: 22px 22px 0 0;
+      padding: 0 0 calc(16px + env(safe-area-inset-bottom));
+      transform: translateY(100%);
+      transition: transform 0.28s cubic-bezier(0.32,0.72,0,1);
+    }
+    #numpadSheet.open { transform: translateY(0); }
+    .numpad-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid var(--sep);
+    }
+    .numpad-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .numpad-value {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text1);
+      flex: 1;
+      text-align: center;
+      padding: 0 12px;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .numpad-done {
+      background: linear-gradient(135deg, #e63228 0%, #a02080 50%, #1a73e8 100%);
+      border: none;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      padding: 8px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: 0.02em;
+      box-shadow: 0 2px 12px rgba(230,50,40,0.35);
+      white-space: nowrap;
+    }
+    .numpad-done:active { opacity: 0.8; }
+    .numpad-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--sep);
+      margin-top: 1px;
+    }
+    .numpad-key {
+      background: rgba(28,28,36,0.95);
+      border: none;
+      color: var(--text1);
+      font-size: 22px;
+      font-weight: 500;
+      font-family: inherit;
+      padding: 20px 0;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.1s;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .numpad-key:active,
+    .numpad-key.flash {
+      background: rgba(230,50,40,0.25);
+      color: var(--red2);
+    }
+
+    /* ── Help Tab ── */
+    .help-search {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--sep);
+      border-radius: 12px;
+      color: var(--text1);
+      font-size: 15px;
+      font-family: inherit;
+      padding: 12px 16px;
+      outline: none;
+      margin-bottom: 16px;
+    }
+    .help-search::placeholder { color: var(--text3); }
+    .help-search:focus { border-color: rgba(230,50,40,0.4); }
+
+    .help-topic {
+      background: var(--card);
+      border-radius: 14px;
+      border: 1px solid var(--sep);
+      border-left: 3px solid var(--red);
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    .help-topic-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text1);
+      user-select: none;
+    }
+    .help-topic-header:active { opacity: 0.7; }
+    .help-chevron {
+      width: 18px;
+      height: 18px;
+      color: var(--text3);
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+    .help-topic.expanded .help-chevron { transform: rotate(90deg); }
+    .help-topic-body {
+      display: none;
+      padding: 0 16px 14px;
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.65;
+      border-top: 1px solid var(--sep);
+    }
+    .help-topic.expanded .help-topic-body { display: block; }
+    .help-no-results {
+      text-align: center;
+      color: var(--text3);
+      font-size: 14px;
+      padding: 32px 16px;
+    }
+
+    .activity-entry {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--sep);
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .activity-entry:last-child { border-bottom: none; }
+    .activity-time {
+      font-size: 11px;
+      color: var(--text3);
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+    .activity-action {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.4;
+    }
+
+    /* ── Export/Import buttons ── */
+    .backup-row {
+      display: flex;
+      gap: 10px;
+      padding: 14px 16px;
+    }
+    .backup-btn {
+      flex: 1;
+      background: none;
+      border: 1px solid var(--sep);
+      color: var(--text1);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 11px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      letter-spacing: 0.02em;
+    }
+    .backup-btn:active { opacity: 0.7; }
+    .backup-btn.export { border-color: rgba(77,159,255,0.35); color: var(--blue2); }
+    .backup-btn.import-btn-style { border-color: rgba(48,209,88,0.3); color: var(--green); }
+    .backup-btn svg { width: 16px; height: 16px; }
   </style>
 </head>
 <body>
@@ -497,9 +719,44 @@
       </div>
       <div class="logo-text">Finance<span>.</span></div>
     </div>
-    <div class="date-pill" id="datePill">—</div>
+    <div class="date-pill" id="datePill">--</div>
   </div>
 </div>
+
+<!-- Refresh Button -->
+<button class="refresh-btn" onclick="location.reload()" title="Refresh">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M23 4v6h-6"/>
+    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+  </svg>
+</button>
+
+<!-- Custom Numpad -->
+<div id="numpadBackdrop" onclick="closeNumpad(true)"></div>
+<div id="numpadSheet">
+  <div class="numpad-header">
+    <span class="numpad-label" id="numpadLabel">Amount</span>
+    <span class="numpad-value" id="numpadDisplay">0</span>
+    <button class="numpad-done" onclick="closeNumpad(true)">Done</button>
+  </div>
+  <div class="numpad-grid">
+    <button class="numpad-key" onclick="numpadKey('1')">1</button>
+    <button class="numpad-key" onclick="numpadKey('2')">2</button>
+    <button class="numpad-key" onclick="numpadKey('3')">3</button>
+    <button class="numpad-key" onclick="numpadKey('4')">4</button>
+    <button class="numpad-key" onclick="numpadKey('5')">5</button>
+    <button class="numpad-key" onclick="numpadKey('6')">6</button>
+    <button class="numpad-key" onclick="numpadKey('7')">7</button>
+    <button class="numpad-key" onclick="numpadKey('8')">8</button>
+    <button class="numpad-key" onclick="numpadKey('9')">9</button>
+    <button class="numpad-key" onclick="numpadKey('.')">.</button>
+    <button class="numpad-key" onclick="numpadKey('0')">0</button>
+    <button class="numpad-key" onclick="numpadKey('back')">&#9003;</button>
+  </div>
+</div>
+
+<!-- Hidden file input for import -->
+<input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importBackup(this)" />
 
 <!-- MAIN CONTENT -->
 <main>
@@ -516,7 +773,7 @@
   <div class="stat-grid">
     <div class="stat-card full" style="background: linear-gradient(135deg, rgba(10,30,80,0.6) 0%, rgba(13,13,20,0.9) 100%); border-color: rgba(26,115,232,0.3);">
       <div class="stat-label">Cash on Hand</div>
-      <input class="cash-input" id="cashInput" type="number" step="0.01" placeholder="0.00" />
+      <input class="cash-input" id="cashInput" type="number" step="0.01" placeholder="0.00" inputmode="none" onclick="openNumpad(this, 'Cash on Hand')" />
       <div class="stat-sub">Tap to update · saves automatically</div>
     </div>
     <div class="stat-card">
@@ -531,11 +788,11 @@
     </div>
   </div>
 
-  <!-- Upcoming payments — rendered by JS -->
+  <!-- Upcoming payments - rendered by JS -->
   <div class="sec">Debt Payments Due</div>
   <div class="card" id="paymentsContainer"></div>
 
-  <!-- Bills — rendered by JS -->
+  <!-- Bills - rendered by JS -->
   <div class="sec">Bills &amp; Recurring</div>
   <div class="card" id="billsContainer"></div>
 
@@ -588,7 +845,7 @@
       </div>
       <div class="prog-edit">
         <span>Balance</span>
-        <input class="prog-input" id="carInput" type="number" step="0.01" placeholder="19678.00" />
+        <input class="prog-input" id="carInput" type="number" step="0.01" placeholder="19678.00" inputmode="none" onclick="openNumpad(this, 'Car Loan Balance')" />
       </div>
       <div class="prog-track"><div class="prog-fill" id="carBar" style="background:var(--blue2);"></div></div>
       <div class="prog-footer"><span class="prog-pct" id="carPct">0% paid off</span><span class="prog-left" id="carLeft">$19,678.00 remaining</span></div>
@@ -603,7 +860,7 @@
       </div>
       <div class="prog-edit">
         <span>Balance</span>
-        <input class="prog-input" id="cap1Input" type="number" step="0.01" placeholder="4243.12" />
+        <input class="prog-input" id="cap1Input" type="number" step="0.01" placeholder="4243.12" inputmode="none" onclick="openNumpad(this, 'Capital One CC Balance')" />
       </div>
       <div class="prog-track"><div class="prog-fill" id="cap1Bar" style="background:var(--red2);"></div></div>
       <div class="prog-footer"><span class="prog-pct" id="cap1Pct">0% paid off</span><span class="prog-left" id="cap1Left">$4,243.12 remaining</span></div>
@@ -618,7 +875,7 @@
       </div>
       <div class="prog-edit">
         <span>Balance</span>
-        <input class="prog-input" id="univInput" type="number" step="0.01" placeholder="1558.00" />
+        <input class="prog-input" id="univInput" type="number" step="0.01" placeholder="1558.00" inputmode="none" onclick="openNumpad(this, 'UofL Balance')" />
       </div>
       <div class="prog-track"><div class="prog-fill" id="univBar" style="background:var(--orange);"></div></div>
       <div class="prog-footer"><span class="prog-pct" id="univPct">0% paid off</span><span class="prog-left" id="univLeft">$1,558.00 remaining</span></div>
@@ -633,7 +890,7 @@
       </div>
       <div class="prog-edit">
         <span>Balance</span>
-        <input class="prog-input" id="lnInput" type="number" step="0.01" placeholder="797.00" />
+        <input class="prog-input" id="lnInput" type="number" step="0.01" placeholder="797.00" inputmode="none" onclick="openNumpad(this, 'L&N CC Balance')" />
       </div>
       <div class="prog-track"><div class="prog-fill" id="lnBar" style="background:var(--red);"></div></div>
       <div class="prog-footer"><span class="prog-pct" id="lnPct">0% paid off</span><span class="prog-left" id="lnLeft">$797.00 remaining</span></div>
@@ -648,7 +905,7 @@
       </div>
       <div class="prog-edit">
         <span>Balance</span>
-        <input class="prog-input" id="bbInput" type="number" step="0.01" placeholder="644.00" />
+        <input class="prog-input" id="bbInput" type="number" step="0.01" placeholder="644.00" inputmode="none" onclick="openNumpad(this, 'Best Buy Balance')" />
       </div>
       <div class="prog-track"><div class="prog-fill" id="bbBar" style="background:var(--blue2);"></div></div>
       <div class="prog-footer"><span class="prog-pct" id="bbPct">0% paid off</span><span class="prog-left" id="bbLeft">$644.00 remaining</span></div>
@@ -661,7 +918,7 @@
   <div class="card">
     <div class="pri-row" onclick="togglePri(0)">
       <div class="pri-check"><svg class="checkmark" viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,8 8.5,2" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="pri-text">Pay off Best Buy ($644) first — smallest debt</div>
+      <div class="pri-text">Pay off Best Buy ($644) first -- smallest debt</div>
     </div>
     <div class="pri-row" onclick="togglePri(1)">
       <div class="pri-check"><svg class="checkmark" viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,8 8.5,2" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -681,7 +938,7 @@
     </div>
     <div class="pri-row" onclick="togglePri(5)">
       <div class="pri-check"><svg class="checkmark" viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,8 8.5,2" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="pri-text">Keep all payments current — no late fees</div>
+      <div class="pri-text">Keep all payments current -- no late fees</div>
     </div>
   </div>
 
@@ -738,27 +995,27 @@
   <div class="card">
     <div class="row">
       <div class="row-left"><div class="row-label">Capital One Credit Card</div></div>
-      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$500</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">-$500</div></div>
     </div>
     <div class="row">
       <div class="row-left"><div class="row-label">Capital One Car Loan</div></div>
-      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$416</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">-$416</div></div>
     </div>
     <div class="row">
       <div class="row-left"><div class="row-label">University of Louisville</div></div>
-      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$120</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">-$120</div></div>
     </div>
     <div class="row">
       <div class="row-left"><div class="row-label">Best Buy</div></div>
-      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$80</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">-$80</div></div>
     </div>
     <div class="row">
       <div class="row-left"><div class="row-label">L&amp;N Credit Card</div></div>
-      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$25</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">-$25</div></div>
     </div>
     <div class="row" style="background:rgba(255,69,58,0.05);">
       <div class="row-left"><div class="row-label" style="font-weight:800;">Total Debt Payments</div></div>
-      <div class="row-right"><div class="row-value" style="color:var(--red2);font-size:17px;">−$1,141</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);font-size:17px;">-$1,141</div></div>
     </div>
   </div>
 
@@ -767,31 +1024,31 @@
   <div class="card">
     <div class="row">
       <div class="row-left"><div class="row-label">Car Insurance</div></div>
-      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$320</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">-$320</div></div>
     </div>
     <div class="row">
       <div class="row-left"><div class="row-label">Gas</div></div>
-      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$173</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">-$173</div></div>
     </div>
     <div class="row">
       <div class="row-left"><div class="row-label">Poppy (food)</div></div>
-      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$217</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">-$217</div></div>
     </div>
     <div class="row">
       <div class="row-left"><div class="row-label">Phone</div></div>
-      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$79</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">-$79</div></div>
     </div>
     <div class="row">
       <div class="row-left"><div class="row-label">Planet Fitness</div></div>
-      <div class="row-right"><div class="row-value" style="color:var(--text2);">−$24</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--text2);">-$24</div></div>
     </div>
     <div class="row">
       <div class="row-left"><div class="row-label">Netflix</div></div>
-      <div class="row-right"><div class="row-value" style="color:var(--text2);">−$10</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--text2);">-$10</div></div>
     </div>
     <div class="row" style="background:rgba(255,69,58,0.05);">
       <div class="row-left"><div class="row-label" style="font-weight:800;">Total Bills</div></div>
-      <div class="row-right"><div class="row-value" style="color:var(--red2);font-size:17px;">−$823</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);font-size:17px;">-$823</div></div>
     </div>
   </div>
 
@@ -804,11 +1061,11 @@
     </div>
     <div class="row">
       <div class="row-left"><div class="row-label">Debt Payments</div></div>
-      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$1,141</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">-$1,141</div></div>
     </div>
     <div class="row">
       <div class="row-left"><div class="row-label">Bills &amp; Living</div></div>
-      <div class="row-right"><div class="row-value" style="color:var(--red2);">−$1,040</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--red2);">-$1,040</div></div>
     </div>
     <div class="row" style="background:rgba(48,209,88,0.07);">
       <div class="row-left">
@@ -836,12 +1093,12 @@
   <div class="card">
     <div class="prog-wrap">
       <div class="prog-header">
-        <span class="prog-name">Phase 1 — First $500</span>
+        <span class="prog-name">Phase 1 -- First $500</span>
         <span class="prog-amt" style="color:var(--green);">Goal: $500</span>
       </div>
       <div class="prog-edit">
         <span>Your balance</span>
-        <input class="prog-input" id="savingsInput" type="number" step="0.01" placeholder="0.00" />
+        <input class="prog-input" id="savingsInput" type="number" step="0.01" placeholder="0.00" inputmode="none" onclick="openNumpad(this, 'Emergency Fund')" />
       </div>
       <div class="prog-track"><div class="prog-fill" id="efBar1" style="background:var(--green);"></div></div>
       <div class="prog-footer"><span class="prog-pct" id="efPct1">0% complete</span><span class="prog-left" id="efLeft1">$500 to go</span></div>
@@ -849,7 +1106,7 @@
     <div class="prog-sep"></div>
     <div class="prog-wrap">
       <div class="prog-header">
-        <span class="prog-name">Phase 2 — Full $1,000</span>
+        <span class="prog-name">Phase 2 -- Full $1,000</span>
         <span class="prog-amt" style="color:var(--blue2);">Goal: $1,000</span>
       </div>
       <div class="prog-track"><div class="prog-fill" id="efBar2" style="background:var(--blue2);"></div></div>
@@ -870,9 +1127,9 @@
     <div class="row">
       <div class="row-left">
         <div class="row-label">To hit $500 emergency fund</div>
-        <div class="row-sub">Put aside ~$100–200/mo</div>
+        <div class="row-sub">Put aside ~$100-200/mo</div>
       </div>
-      <div class="row-right"><div class="row-value" style="color:var(--blue2);">3–5 months</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--blue2);">3-5 months</div></div>
     </div>
     <div class="row">
       <div class="row-left">
@@ -896,16 +1153,59 @@
       </div>
       <div class="prog-edit" style="margin-bottom:6px;">
         <span>Target amount ($)</span>
-        <input class="prog-input" id="goalTarget" type="number" step="0.01" placeholder="500.00" />
+        <input class="prog-input" id="goalTarget" type="number" step="0.01" placeholder="500.00" inputmode="none" onclick="openNumpad(this, 'Goal Target')" />
       </div>
       <div class="prog-edit">
         <span>Saved so far ($)</span>
-        <input class="prog-input" id="goalCurrent" type="number" step="0.01" placeholder="0.00" />
+        <input class="prog-input" id="goalCurrent" type="number" step="0.01" placeholder="0.00" inputmode="none" onclick="openNumpad(this, 'Goal Current')" />
       </div>
       <div class="prog-track" style="margin-top:8px;"><div class="prog-fill" id="goalBar" style="background: linear-gradient(90deg, var(--red), var(--blue2));"></div></div>
       <div class="prog-footer"><span class="prog-pct" id="goalPct">0% complete</span><span class="prog-left" id="goalLeft"></span></div>
     </div>
   </div>
+
+  <div class="spacer"></div>
+</div>
+
+
+<!-- ═══ HELP ═══ -->
+<div class="panel" id="tab-help">
+
+  <div class="page-header" style="margin-top:16px;">
+    <div class="page-title">Help</div>
+    <div class="page-sub">How everything works</div>
+  </div>
+
+  <input type="search" class="help-search" id="helpSearch" placeholder="Search help topics..." oninput="filterHelp(this.value)" />
+
+  <div id="helpTopicsContainer"></div>
+
+  <!-- Backup section -->
+  <div class="sec">Backup &amp; Restore</div>
+  <div class="card">
+    <div class="backup-row">
+      <button class="backup-btn export" onclick="exportBackup()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Export Backup
+      </button>
+      <button class="backup-btn import-btn-style" onclick="document.getElementById('importFileInput').click()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        Import Backup
+      </button>
+    </div>
+  </div>
+
+  <!-- Activity Log -->
+  <div class="sec">Activity Log</div>
+  <div class="card" id="activityLogContainer"></div>
 
   <div class="spacer"></div>
 </div>
@@ -939,6 +1239,14 @@
     </svg>
     Savings
   </button>
+  <button class="nav-item" onclick="showTab('help',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+      <line x1="12" y1="17" x2="12.01" y2="17"/>
+    </svg>
+    Help
+  </button>
 </nav>
 
 <script>
@@ -956,6 +1264,40 @@
   const get = (k, d) => localStorage.getItem(LS + k) ?? d;
   const set = (k, v) => localStorage.setItem(LS + k, v);
 
+  // ── Activity Log ──
+  function logActivity(action) {
+    const d = new Date();
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    let h = d.getHours();
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    const min = String(d.getMinutes()).padStart(2, '0');
+    const t = months[d.getMonth()] + ' ' + d.getDate() + ', ' + h + ':' + min + ' ' + ampm;
+    let log = [];
+    try { log = JSON.parse(localStorage.getItem(LS + 'log') || '[]'); } catch(e) { log = []; }
+    log.unshift({ t, a: action });
+    if (log.length > 100) log = log.slice(0, 100);
+    localStorage.setItem(LS + 'log', JSON.stringify(log));
+  }
+
+  function renderActivityLog() {
+    const container = document.getElementById('activityLogContainer');
+    if (!container) return;
+    let log = [];
+    try { log = JSON.parse(localStorage.getItem(LS + 'log') || '[]'); } catch(e) { log = []; }
+    const entries = log.slice(0, 20);
+    if (entries.length === 0) {
+      container.innerHTML = '<div style="padding:20px 16px;text-align:center;color:var(--text3);font-size:14px;">No activity yet -- start using the app to see your history here.</div>';
+      return;
+    }
+    container.innerHTML = entries.map(e =>
+      '<div class="activity-entry">' +
+        '<span class="activity-time">' + e.t + '</span>' +
+        '<span class="activity-action">' + e.a + '</span>' +
+      '</div>'
+    ).join('');
+  }
+
   // ── Tab navigation ──
   function showTab(id, btn) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -963,12 +1305,61 @@
     document.getElementById('tab-' + id).classList.add('active');
     btn.classList.add('active');
     window.scrollTo(0, 0);
+    if (id === 'help') renderActivityLog();
+  }
+
+  // ── Custom Numpad ──
+  let numpadTarget = null;
+  let numpadRawValue = '';
+
+  function openNumpad(el, label) {
+    numpadTarget = el;
+    numpadRawValue = el.value !== '' ? el.value : '';
+    document.getElementById('numpadLabel').textContent = label || 'Amount';
+    document.getElementById('numpadDisplay').textContent = numpadRawValue !== '' ? numpadRawValue : '0';
+    document.getElementById('numpadBackdrop').classList.add('open');
+    document.getElementById('numpadSheet').classList.add('open');
+  }
+
+  function closeNumpad(confirm) {
+    if (confirm && numpadTarget) {
+      const val = numpadRawValue;
+      numpadTarget.value = val;
+      const evt = new Event('input', { bubbles: true });
+      numpadTarget.dispatchEvent(evt);
+      const blurEvt = new Event('blur', { bubbles: true });
+      numpadTarget.dispatchEvent(blurEvt);
+    }
+    document.getElementById('numpadBackdrop').classList.remove('open');
+    document.getElementById('numpadSheet').classList.remove('open');
+    numpadTarget = null;
+    numpadRawValue = '';
+  }
+
+  function numpadKey(k) {
+    if (k === 'back') {
+      numpadRawValue = numpadRawValue.slice(0, -1);
+    } else if (k === '.') {
+      if (!numpadRawValue.includes('.')) {
+        numpadRawValue = numpadRawValue === '' ? '0.' : numpadRawValue + '.';
+      }
+    } else {
+      if (numpadRawValue === '0' && k !== '.') {
+        numpadRawValue = k;
+      } else {
+        numpadRawValue += k;
+      }
+    }
+    document.getElementById('numpadDisplay').textContent = numpadRawValue !== '' ? numpadRawValue : '0';
   }
 
   // ── Cash input ──
   const cashEl = document.getElementById('cashInput');
   cashEl.value = get('cash', '270');
   cashEl.addEventListener('input', () => set('cash', cashEl.value));
+  cashEl.addEventListener('blur', () => {
+    if (cashEl.value !== '') logActivity('Cash balance updated to $' + parseFloat(cashEl.value || 0).toFixed(2));
+  });
 
   // ── Notes ──
   const notesEl = document.getElementById('notesArea');
@@ -1066,7 +1457,7 @@
             '<div class="row-value" style="color:' + tagColor(tag.cls) + ';">' + p.amount + '</div>' +
             '<div class="tag-row">' +
               '<span class="tag ' + tag.cls + '">' + tag.text + '</span>' +
-              '<button class="pay-btn" onclick="startConfirm(\'' + p.id + '\',\'' + containerId + '\')">Paid ✓</button>' +
+              '<button class="pay-btn" onclick="startConfirm(\'' + p.id + '\',\'' + containerId + '\')">Paid &#10003;</button>' +
             '</div>' +
           '</div>';
       } else if (state === 'confirming') {
@@ -1075,7 +1466,7 @@
             '<div class="row-value" style="color:' + tagColor(tag.cls) + ';">' + p.amount + '</div>' +
             '<div class="confirm-row">' +
               '<button class="cancel-btn" onclick="cancelConfirm(\'' + p.id + '\',\'' + containerId + '\')">Cancel</button>' +
-              '<button class="confirm-btn" onclick="confirmPaid(\'' + p.id + '\',\'' + dueISO + '\',\'' + p.freq + '\',' + p.baseDay + ',\'' + containerId + '\')">Confirm Paid →</button>' +
+              '<button class="confirm-btn" onclick="confirmPaid(\'' + p.id + '\',\'' + dueISO + '\',\'' + p.freq + '\',' + p.baseDay + ',\'' + containerId + '\',\'' + p.name.replace(/'/g,"&#39;") + '\')">Confirm Paid &rarr;</button>' +
             '</div>' +
           '</div>';
       } else if (state === 'done') {
@@ -1083,8 +1474,8 @@
           '<div class="row-right-col">' +
             '<div class="row-value" style="color:var(--text3);">' + p.amount + '</div>' +
             '<div class="tag-row">' +
-              '<span class="tag tag-paid">PAID ✓</span>' +
-              '<button class="undo-btn" onclick="undoPaid(\'' + p.id + '\',\'' + containerId + '\')">↩ Undo</button>' +
+              '<span class="tag tag-paid">PAID &#10003;</span>' +
+              '<button class="undo-btn" onclick="undoPaid(\'' + p.id + '\',\'' + containerId + '\')">&#8617; Undo</button>' +
             '</div>' +
           '</div>';
       }
@@ -1110,11 +1501,12 @@
     renderList(containerId === 'paymentsContainer' ? PAYMENTS : BILLS, containerId);
   }
 
-  function confirmPaid(id, currentISO, freq, baseDay, containerId) {
+  function confirmPaid(id, currentISO, freq, baseDay, containerId, name) {
     prevDates[id] = currentISO;
     const next = advanceDate(currentISO, freq, baseDay);
     set(id, next);
     payState[id] = 'done';
+    logActivity('Marked ' + (name || id) + ' paid');
     renderList(containerId === 'paymentsContainer' ? PAYMENTS : BILLS, containerId);
   }
 
@@ -1133,11 +1525,11 @@
 
   // ── Debt bars ──
   const DEBTS = [
-    { id: 'carInput',  barId: 'carBar',  pctId: 'carPct',  leftId: 'carLeft',  orig: 19678.00 },
-    { id: 'cap1Input', barId: 'cap1Bar', pctId: 'cap1Pct', leftId: 'cap1Left', orig: 4243.12 },
-    { id: 'univInput', barId: 'univBar', pctId: 'univPct', leftId: 'univLeft', orig: 1558.00 },
-    { id: 'lnInput',   barId: 'lnBar',   pctId: 'lnPct',   leftId: 'lnLeft',   orig: 797.00  },
-    { id: 'bbInput',   barId: 'bbBar',   pctId: 'bbPct',   leftId: 'bbLeft',   orig: 644.00  },
+    { id: 'carInput',  barId: 'carBar',  pctId: 'carPct',  leftId: 'carLeft',  orig: 19678.00, name: 'Capital One Car Loan' },
+    { id: 'cap1Input', barId: 'cap1Bar', pctId: 'cap1Pct', leftId: 'cap1Left', orig: 4243.12,  name: 'Capital One Credit Card' },
+    { id: 'univInput', barId: 'univBar', pctId: 'univPct', leftId: 'univLeft', orig: 1558.00,  name: 'University of Louisville' },
+    { id: 'lnInput',   barId: 'lnBar',   pctId: 'lnPct',   leftId: 'lnLeft',   orig: 797.00,   name: 'L&N Credit Card' },
+    { id: 'bbInput',   barId: 'bbBar',   pctId: 'bbPct',   leftId: 'bbLeft',   orig: 644.00,   name: 'Best Buy' },
   ];
 
   function recalcTotal() {
@@ -1163,6 +1555,9 @@
       recalcTotal();
     }
     el.addEventListener('input', () => { set(d.id, el.value); update(); });
+    el.addEventListener('blur', () => {
+      if (el.value !== '') logActivity(d.name + ' balance updated to ' + fmt(parseFloat(el.value) || 0));
+    });
     update();
   });
 
@@ -1175,10 +1570,10 @@
     const p2 = Math.min(100, (v / 1000) * 100);
     document.getElementById('efBar1').style.width = p1 + '%';
     document.getElementById('efPct1').textContent = p1.toFixed(0) + '% complete';
-    document.getElementById('efLeft1').textContent = v >= 500 ? '✓ Phase 1 done!' : fmt(500 - v) + ' to go';
+    document.getElementById('efLeft1').textContent = v >= 500 ? '&#10003; Phase 1 done!' : fmt(500 - v) + ' to go';
     document.getElementById('efBar2').style.width = p2 + '%';
     document.getElementById('efPct2').textContent = p2.toFixed(0) + '% complete';
-    document.getElementById('efLeft2').textContent = v >= 1000 ? '✓ Goal reached!' : fmt(1000 - v) + ' to go';
+    document.getElementById('efLeft2').textContent = v >= 1000 ? '&#10003; Goal reached!' : fmt(1000 - v) + ' to go';
   }
   savEl.addEventListener('input', () => { set('savings', savEl.value); updateSavings(); });
   updateSavings();
@@ -1195,7 +1590,7 @@
     const pct = target > 0 ? Math.min(100, (current / target) * 100) : 0;
     document.getElementById('goalBar').style.width = pct + '%';
     document.getElementById('goalPct').textContent = pct.toFixed(0) + '% complete';
-    document.getElementById('goalLeft').textContent = target > 0 && current < target ? fmt(target - current) + ' to go' : target > 0 ? '✓ Done!' : '';
+    document.getElementById('goalLeft').textContent = target > 0 && current < target ? fmt(target - current) + ' to go' : target > 0 ? '&#10003; Done!' : '';
   }
   updateGoal();
 
@@ -1213,6 +1608,129 @@
     set('pri', JSON.stringify(Array.from(rows).map(r => r.classList.contains('done'))));
   }
   loadPri();
+
+  // ── Export Backup ──
+  function exportBackup() {
+    const data = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith(LS)) {
+        data[key] = localStorage.getItem(key);
+      }
+    }
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const d = new Date();
+    const dateStr = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    a.href = url;
+    a.download = 'spiderwoman-backup-' + dateStr + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    logActivity('Backup exported');
+  }
+
+  // ── Import Backup ──
+  function importBackup(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const data = JSON.parse(e.target.result);
+        Object.keys(data).forEach(key => {
+          if (key.startsWith(LS)) {
+            localStorage.setItem(key, data[key]);
+          }
+        });
+        logActivity('Backup imported from ' + file.name);
+        location.reload();
+      } catch(err) {
+        alert('Import failed: invalid backup file.');
+      }
+    };
+    reader.readAsText(file);
+    input.value = '';
+  }
+
+  // ── Help Topics ──
+  const HELP_TOPICS = [
+    {
+      title: 'Cash on Hand',
+      body: 'Tap the big number on the Today tab. The numpad pops up. Type your current cash and tap Done. It saves automatically.'
+    },
+    {
+      title: 'Marking a Payment Paid',
+      body: 'On the Today tab under Debt Payments, tap "Paid" next to any payment. Tap "Confirm Paid" to lock it in. The due date automatically moves to next month. Tap "Undo" if you made a mistake.'
+    },
+    {
+      title: 'Updating Debt Balances',
+      body: 'Go to the Debts tab. Tap any balance field and type the current remaining balance. The progress bar updates automatically.'
+    },
+    {
+      title: 'Bills and Recurring',
+      body: 'Same as payments -- tap "Paid" then "Confirm Paid." Bills like gas and Poppy advance by their frequency (weekly, every 10 days, etc.).'
+    },
+    {
+      title: 'Emergency Fund',
+      body: 'Go to Savings. Tap the balance field and enter how much you currently have saved. Both Phase 1 ($500) and Phase 2 ($1,000) progress bars update.'
+    },
+    {
+      title: 'Custom Savings Goal',
+      body: 'In the Savings tab, type a goal name, target amount, and how much you\'ve saved so far. The progress bar shows how close you are.'
+    },
+    {
+      title: 'Backup and Restore',
+      body: 'Tap Export Backup to download a file with all your data. Save it somewhere safe (iCloud, Notes, email to yourself). If you clear your browser or get a new phone, tap Import Backup and pick that file to restore everything.'
+    },
+    {
+      title: 'Refresh',
+      body: 'Tap the circular arrow in the top-right corner to reload the app. Do this if something looks off or you want to make sure you have the latest version.'
+    },
+    {
+      title: "Today's Notes",
+      body: 'The notes field on the Today tab saves automatically as you type. Each day has its own note -- old notes stay saved.'
+    },
+    {
+      title: 'Payoff Strategy',
+      body: 'In the Debts tab, tap any item in the Payoff Strategy list to check it off as you accomplish it. They save automatically.'
+    }
+  ];
+
+  function buildHelpTopics(filter) {
+    const container = document.getElementById('helpTopicsContainer');
+    const q = (filter || '').trim().toLowerCase();
+    const filtered = q
+      ? HELP_TOPICS.filter(t => t.title.toLowerCase().includes(q) || t.body.toLowerCase().includes(q))
+      : HELP_TOPICS;
+
+    if (filtered.length === 0) {
+      container.innerHTML = '<div class="help-no-results">No results for "' + filter + '"</div>';
+      return;
+    }
+
+    container.innerHTML = filtered.map((t, i) =>
+      '<div class="help-topic" id="help-topic-' + i + '">' +
+        '<div class="help-topic-header" onclick="toggleHelpTopic(this.parentElement)">' +
+          '<span>' + t.title + '</span>' +
+          '<svg class="help-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>' +
+        '</div>' +
+        '<div class="help-topic-body">' + t.body + '</div>' +
+      '</div>'
+    ).join('');
+  }
+
+  function toggleHelpTopic(el) {
+    el.classList.toggle('expanded');
+  }
+
+  function filterHelp(val) {
+    buildHelpTopics(val);
+  }
+
+  buildHelpTopics('');
 </script>
 </body>
 </html>
