@@ -205,11 +205,11 @@
 
   <div class="sec">Income This Week</div>
   <div class="card">
-    <div class="row"><div><div class="row-label">UPS Payroll</div><div class="row-sub">~Jun 11</div></div><div class="row-value" style="color:var(--green);">~$500</div></div>
+    <div class="row"><div><div class="row-label">UPS Payroll</div><div class="row-sub">Paid Jun 11 · next Jun 18</div></div><div class="row-value" style="color:var(--green);">$398.91</div></div>
     <div class="row"><div><div class="row-label">DoorDash</div><div class="row-sub">Fri · Sat · Sun · Mon</div></div><div class="row-value" style="color:var(--green);">~$247</div></div>
-    <div class="row" style="background:rgba(48,209,88,0.05);"><div class="row-label" style="font-weight:700;">Total</div><div class="row-value" style="color:var(--green);font-size:17px;">~$747</div></div>
-    <div class="row" style="background:rgba(255,69,58,0.04);"><div class="row-label" style="color:var(--text2);">Bills</div><div class="row-value" style="color:var(--red);">-$237.77</div></div>
-    <div class="row" style="background:rgba(48,209,88,0.04);"><div class="row-label" style="font-weight:600;">After bills</div><div class="row-value" style="color:var(--green);font-weight:700;">~$509</div></div>
+    <div class="row" style="background:rgba(48,209,88,0.05);"><div class="row-label" style="font-weight:700;">Total</div><div class="row-value" style="color:var(--green);font-size:17px;">~$646</div></div>
+    <div class="row" style="background:rgba(255,69,58,0.04);"><div class="row-label" style="color:var(--text2);">Bills (Haircut · Spotify · T-Mobile)</div><div class="row-value" style="color:var(--red);">-$212.77</div></div>
+    <div class="row" style="background:rgba(48,209,88,0.04);"><div class="row-label" style="font-weight:600;">After bills</div><div class="row-value" style="color:var(--green);font-weight:700;">~$433</div></div>
   </div>
 
   <div class="sec">Today's Notes</div>
@@ -390,7 +390,7 @@
   const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   document.getElementById('todayDateText').textContent = DAYS[now.getDay()] + ', ' + MONTHS[now.getMonth()] + ' ' + now.getDate();
-  const nextPay = new Date('2026-06-11');
+  const nextPay = new Date('2026-06-18');
   const dOut = Math.ceil((nextPay - now) / 86400000);
   document.getElementById('payChip').textContent = dOut <= 0 ? 'Check account' : 'in ' + dOut + ' day' + (dOut===1?'':'s');
 
@@ -406,7 +406,7 @@
   }
 
   const cashEl = document.getElementById('cashInput');
-  cashEl.value = get('cash','');
+  cashEl.value = get('cash','427.65');
   cashEl.addEventListener('input', () => set('cash', cashEl.value));
 
   const efEl = document.getElementById('efInput');
