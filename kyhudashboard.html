@@ -147,6 +147,13 @@
     .sum-row { display: flex; justify-content: space-between; padding: 13px 16px; border-bottom: 1px solid var(--sep); font-size: 15px; }
     .sum-row:last-child { border-bottom: none; }
     .sum-total { font-weight: 700; font-size: 17px; }
+
+    /* ── Backup buttons ── */
+    .backup-row { display: flex; gap: 10px; }
+    .backup-btn { flex: 1; background: var(--card2); border: none; border-radius: 10px; color: var(--text1); font-size: 14px; font-weight: 600; padding: 13px 10px; font-family: inherit; cursor: pointer; transition: background 0.15s; }
+    .backup-btn:active { background: var(--card3); }
+    .backup-btn.import { color: var(--blue); }
+    .backup-toast { text-align: center; font-size: 12px; color: var(--green); margin-top: 8px; min-height: 16px; transition: opacity 0.3s; }
   </style>
 </head>
 <body>
@@ -206,6 +213,14 @@
 
   <div class="sec">Today's Notes</div>
   <div class="card"><textarea class="notes-area" id="notesArea" placeholder="What's the plan today?"></textarea></div>
+
+  <div class="sec">Data Backup</div>
+  <div class="backup-row">
+    <button class="backup-btn" onclick="exportData()">Export Backup</button>
+    <button class="backup-btn import" onclick="document.getElementById('importFile').click()">Restore Backup</button>
+  </div>
+  <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+  <div class="backup-toast" id="backupToast"></div>
 </div>
 
 <!-- ══ GOALS ══ -->
@@ -446,6 +461,37 @@
   const today=now.toISOString().split('T')[0];
   notesEl.value=get('notes_'+today,'');
   notesEl.addEventListener('input',()=>set('notes_'+today,notesEl.value));
+
+  function showToast(msg){
+    const t=document.getElementById('backupToast');
+    t.textContent=msg;t.style.opacity='1';
+    setTimeout(()=>{t.style.opacity='0';},2500);
+  }
+  function exportData(){
+    const data={};
+    for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('fin2_'))data[k]=localStorage.getItem(k);}
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='kyhu-backup-'+today+'.json';
+    a.click();URL.revokeObjectURL(a.href);
+    showToast('Backup saved.');
+  }
+  function importData(e){
+    const file=e.target.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=function(ev){
+      try{
+        const data=JSON.parse(ev.target.result);
+        let count=0;
+        for(const [k,v] of Object.entries(data)){if(k.startsWith('fin2_')){localStorage.setItem(k,v);count++;}}
+        showToast('Restored '+count+' items. Reloading...');
+        setTimeout(()=>location.reload(),1200);
+      }catch(err){showToast('Invalid backup file.');}
+    };
+    reader.readAsText(file);
+    e.target.value='';
+  }
 </script>
 </body>
 </html>
