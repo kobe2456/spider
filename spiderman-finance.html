@@ -458,24 +458,16 @@
     }
 
     /* ── Refresh Button ── */
-    .refresh-btn {
-      position: fixed;
-      top: 56px;
-      right: 16px;
-      z-index: 200;
-      width: 36px;
-      height: 36px;
+    .refresh-icon-btn {
+      width: 32px; height: 32px;
       border-radius: 50%;
-      background: rgba(19,19,26,0.95);
+      background: none;
       border: 1px solid var(--sep);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0; padding: 0;
     }
-    .refresh-btn:active { opacity: 0.7; }
-    .refresh-btn svg { width: 18px; height: 18px; color: var(--text2); }
+    .refresh-icon-btn:active { opacity: 0.6; }
+    .refresh-icon-btn svg { width: 15px; height: 15px; color: var(--text2); }
 
     /* ── Custom Numpad ── */
     #numpadBackdrop {
@@ -720,16 +712,11 @@
       <div class="logo-text">Finance<span>.</span></div>
     </div>
     <div class="date-pill" id="datePill">--</div>
+    <button class="refresh-icon-btn" onclick="location.reload()" title="Refresh">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+    </button>
   </div>
 </div>
-
-<!-- Refresh Button -->
-<button class="refresh-btn" onclick="location.reload()" title="Refresh">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M23 4v6h-6"/>
-    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-  </svg>
-</button>
 
 <!-- Custom Numpad -->
 <div id="numpadBackdrop" onclick="closeNumpad(true)"></div>
@@ -958,7 +945,7 @@
   <div class="stat-grid">
     <div class="stat-card">
       <div class="stat-label">Income</div>
-      <div class="stat-val" style="color:var(--green);">$3,033</div>
+      <div class="stat-val" style="color:var(--green);" id="budIncomeStat">$3,033</div>
       <div class="stat-sub">UPS + Churchill Downs</div>
     </div>
     <div class="stat-card">
@@ -968,7 +955,7 @@
     </div>
     <div class="stat-card full" style="background: linear-gradient(135deg, rgba(48,209,88,0.1) 0%, rgba(13,13,20,0.9) 100%); border-color: rgba(48,209,88,0.25);">
       <div class="stat-label">Monthly Surplus</div>
-      <div class="stat-val" style="color:var(--green);">~$852</div>
+      <div class="stat-val" style="color:var(--green);" id="budSurplusStat">~$852</div>
       <div class="stat-sub">Available for savings &amp; extra debt payments</div>
     </div>
   </div>
@@ -977,16 +964,20 @@
   <div class="sec">Income</div>
   <div class="card">
     <div class="row">
-      <div class="row-left"><div class="row-label">UPS</div><div class="row-sub">~$450/week</div></div>
-      <div class="row-right"><div class="row-value" style="color:var(--green);">+$1,950</div></div>
+      <div class="row-left"><div class="row-label">UPS</div><div class="row-sub">monthly estimate · tap to edit</div></div>
+      <div class="row-right" style="display:flex;align-items:center;gap:3px;color:var(--green);font-weight:700;font-size:15px;">
+        +<input class="row-input" id="budUPS" type="number" step="1" placeholder="1950" inputmode="none" onclick="openNumpad(this,'UPS Monthly Income')" style="color:var(--green);" />
+      </div>
     </div>
     <div class="row">
-      <div class="row-left"><div class="row-label">Churchill Downs</div><div class="row-sub">~$500 every 2 weeks</div></div>
-      <div class="row-right"><div class="row-value" style="color:var(--green);">+$1,083</div></div>
+      <div class="row-left"><div class="row-label">Churchill Downs</div><div class="row-sub">monthly estimate · tap to edit</div></div>
+      <div class="row-right" style="display:flex;align-items:center;gap:3px;color:var(--green);font-weight:700;font-size:15px;">
+        +<input class="row-input" id="budChurchill" type="number" step="1" placeholder="1083" inputmode="none" onclick="openNumpad(this,'Churchill Downs Monthly Income')" style="color:var(--green);" />
+      </div>
     </div>
     <div class="row" style="background:rgba(48,209,88,0.05);">
       <div class="row-left"><div class="row-label" style="font-weight:800;">Total Income</div></div>
-      <div class="row-right"><div class="row-value" style="color:var(--green);font-size:18px;">+$3,033</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--green);font-size:18px;" id="budTotalIncome">+$3,033</div></div>
     </div>
   </div>
 
@@ -1057,7 +1048,7 @@
   <div class="card">
     <div class="row">
       <div class="row-left"><div class="row-label">Income</div></div>
-      <div class="row-right"><div class="row-value" style="color:var(--green);">+$3,033</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--green);" id="budBLIncome">+$3,033</div></div>
     </div>
     <div class="row">
       <div class="row-left"><div class="row-label">Debt Payments</div></div>
@@ -1072,7 +1063,7 @@
         <div class="row-label" style="font-weight:800;font-size:16px;">Left for Savings</div>
         <div class="row-sub">per month, after everything</div>
       </div>
-      <div class="row-right"><div class="row-value" style="color:var(--green);font-size:22px;font-weight:800;">~$852</div></div>
+      <div class="row-right"><div class="row-value" style="color:var(--green);font-size:22px;font-weight:800;" id="budBLSurplus">~$852</div></div>
     </div>
   </div>
 
@@ -1387,7 +1378,7 @@
   const BILLS = [
     { id: 'b_insurance', name: 'Car Insurance',  amount: '$320',  freq: 'monthly', baseDay: 1,  init: '2026-07-01' },
     { id: 'b_phone',     name: 'Phone',          amount: '$79',   freq: 'monthly', baseDay: 17, init: '2026-06-17' },
-    { id: 'b_poppy',     name: 'Poppy (food)',   amount: '~$50',  freq: 'weekly',  baseDay: null, init: '2026-06-14' },
+    { id: 'b_poppy',     name: 'Poppy (food)',   amount: '~$50/wk',  freq: 'weekly',  baseDay: null, init: '2026-06-14' },
     { id: 'b_gas',       name: 'Gas',            amount: '~$60',  freq: 'days10',  baseDay: null, init: '2026-06-15' },
     { id: 'b_netflix',   name: 'Netflix',        amount: '$10',   freq: 'monthly', baseDay: 1,  init: '2026-07-01' },
     { id: 'b_planet',    name: 'Planet Fitness', amount: '$24',   freq: 'monthly', baseDay: 1,  init: '2026-07-01' },
@@ -1437,12 +1428,13 @@
     const container = document.getElementById(containerId);
     container.innerHTML = '';
     const sorted = [...items].sort((a, b) => get(a.id, a.init).localeCompare(get(b.id, b.init)));
+    const todayStr = new Date().toISOString().split('T')[0];
 
     sorted.forEach((p, idx) => {
       const dueISO = get(p.id, p.init);
       const tag = getTag(dueISO);
       const due = new Date(dueISO + 'T12:00:00');
-      const state = payState[p.id] || 'normal';
+      const state = payState[p.id] || (get('paidOn_' + p.id, '') === todayStr ? 'done' : 'normal');
       const isLast = idx === sorted.length - 1;
 
       const row = document.createElement('div');
@@ -1505,6 +1497,7 @@
     prevDates[id] = currentISO;
     const next = advanceDate(currentISO, freq, baseDay);
     set(id, next);
+    set('paidOn_' + id, new Date().toISOString().split('T')[0]);
     payState[id] = 'done';
     logActivity('Marked ' + (name || id) + ' paid');
     renderList(containerId === 'paymentsContainer' ? PAYMENTS : BILLS, containerId);
@@ -1515,6 +1508,7 @@
       set(id, prevDates[id]);
       delete prevDates[id];
     }
+    set('paidOn_' + id, '');
     payState[id] = 'normal';
     renderList(containerId === 'paymentsContainer' ? PAYMENTS : BILLS, containerId);
   }
@@ -1731,6 +1725,30 @@
   }
 
   buildHelpTopics('');
+
+  // ── Budget income recalc ──
+  const BUD_FIXED_EXPENSES = 2181;
+  const budUPSEl = document.getElementById('budUPS');
+  const budChurchillEl = document.getElementById('budChurchill');
+  budUPSEl.value = get('budUPS', '1950');
+  budChurchillEl.value = get('budChurchill', '1083');
+
+  function recalcBudget() {
+    const ups = parseFloat(budUPSEl.value) || 1950;
+    const ch = parseFloat(budChurchillEl.value) || 1083;
+    const totalInc = ups + ch;
+    const surplus = Math.max(0, totalInc - BUD_FIXED_EXPENSES);
+    document.getElementById('budTotalIncome').textContent = '+' + fmt(totalInc);
+    document.getElementById('budIncomeStat').textContent = fmt(totalInc);
+    document.getElementById('budSurplusStat').textContent = '~' + fmt(surplus);
+    document.getElementById('budBLIncome').textContent = '+' + fmt(totalInc);
+    document.getElementById('budBLSurplus').textContent = '~' + fmt(surplus);
+    document.getElementById('leftOverVal').textContent = '~' + fmt(surplus);
+  }
+
+  budUPSEl.addEventListener('input', () => { set('budUPS', budUPSEl.value); recalcBudget(); });
+  budChurchillEl.addEventListener('input', () => { set('budChurchill', budChurchillEl.value); recalcBudget(); });
+  recalcBudget();
 </script>
 </body>
 </html>
