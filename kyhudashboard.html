@@ -555,15 +555,15 @@
 
   // ── Bill toggle ──
   const BILL_DEFAULTS = {
-    sfauto:   { tag:'tag-paid',     text:'PAID ✓' },
-    spectrum: { tag:'tag-now',      text:'DUE NOW' },
-    haircut:  { tag:'tag-soon',     text:'JUN 13' },
-    spotify:  { tag:'tag-soon',     text:'JUN 14' },
-    tmobile:  { tag:'tag-soon',     text:'JUN 15' },
-    sflife:   { tag:'tag-upcoming', text:'JUN 20' },
-    planetfit:{ tag:'tag-upcoming', text:'MONTHLY' },
-    qsmin:    { tag:'tag-upcoming', text:'MONTHLY' },
-    somin:    { tag:'tag-upcoming', text:'MONTHLY' },
+    sfauto:   { tag:'tag-paid',     text:'PAID ✓',  amt: 119.81 },
+    spectrum: { tag:'tag-now',      text:'DUE NOW', amt: 85.00  },
+    haircut:  { tag:'tag-soon',     text:'JUN 13',  amt: 60.00  },
+    spotify:  { tag:'tag-soon',     text:'JUN 14',  amt: 13.77  },
+    tmobile:  { tag:'tag-soon',     text:'JUN 15',  amt: 139.00 },
+    sflife:   { tag:'tag-upcoming', text:'JUN 20',  amt: 32.91  },
+    planetfit:{ tag:'tag-upcoming', text:'MONTHLY', amt: 24.99  },
+    qsmin:    { tag:'tag-upcoming', text:'MONTHLY', amt: 322.00 },
+    somin:    { tag:'tag-upcoming', text:'MONTHLY', amt: 481.00 },
   };
   const billMonth = now.toISOString().slice(0,7);
   function getPaidBills(){ return JSON.parse(get('bills_'+billMonth,'[]')); }
@@ -571,7 +571,19 @@
   function toggleBill(key){
     const paid = getPaidBills();
     const idx = paid.indexOf(key);
-    if(idx >= 0) paid.splice(idx,1); else paid.push(key);
+    const amt = (BILL_DEFAULTS[key] && BILL_DEFAULTS[key].amt) || 0;
+    const current = parseFloat(cashEl.value) || 0;
+    if(idx >= 0){
+      paid.splice(idx, 1);
+      const updated = (current + amt).toFixed(2);
+      cashEl.value = updated;
+      set('cash', updated);
+    } else {
+      paid.push(key);
+      const updated = (current - amt).toFixed(2);
+      cashEl.value = updated;
+      set('cash', updated);
+    }
     savePaidBills(paid);
     renderBillTags();
   }
