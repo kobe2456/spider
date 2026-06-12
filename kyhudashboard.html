@@ -226,7 +226,7 @@
 
   <div class="sec">Coming Up</div>
   <div class="card">
-    <div class="bill-row row" onclick="toggleBill('spectrum')"><div><div class="row-label">Spectrum</div><div class="row-sub">Jun 9 · autopay</div></div><div class="row-right"><div class="row-value">$85.00</div><div style="margin-top:4px;" id="today-tag-spectrum"><span class="tag tag-now">DUE NOW</span></div></div></div>
+    <div class="bill-row row" onclick="toggleBill('spectrum')"><div><div class="row-label">Spectrum</div><div class="row-sub">Paid Jun 12</div></div><div class="row-right"><div class="row-value">$85.00</div><div style="margin-top:4px;" id="today-tag-spectrum"><span class="tag tag-paid">PAID ✓</span></div></div></div>
     <div class="bill-row row" onclick="toggleBill('haircut')"><div><div class="row-label">Haircut</div><div class="row-sub">Jun 13 · Friday</div></div><div class="row-right"><div class="row-value">$60.00</div><div style="margin-top:4px;" id="today-tag-haircut"><span class="tag tag-soon">JUN 13</span></div></div></div>
     <div class="bill-row row" onclick="toggleBill('spotify')"><div><div class="row-label">Spotify</div><div class="row-sub">Jun 14</div></div><div class="row-right"><div class="row-value">$13.77</div><div style="margin-top:4px;" id="today-tag-spotify"><span class="tag tag-soon">JUN 14</span></div></div></div>
     <div class="bill-row row" onclick="toggleBill('tmobile')"><div><div class="row-label">T-Mobile</div><div class="row-sub">Jun 15</div></div><div class="row-right"><div class="row-value">$139.00</div><div style="margin-top:4px;" id="today-tag-tmobile"><span class="tag tag-soon">JUN 15</span></div></div></div>
@@ -339,7 +339,7 @@
   <div class="sec">This Month</div>
   <div class="card">
     <div class="bill-row row" onclick="toggleBill('sfauto')"><div><div class="row-label">State Farm Auto</div><div class="row-sub">Paid Jun 4</div></div><div class="row-right"><div class="row-value" style="color:var(--text2);">$119.81</div><div style="margin-top:4px;" id="bills-tag-sfauto"><span class="tag tag-paid">PAID ✓</span></div></div></div>
-    <div class="bill-row row" onclick="toggleBill('spectrum')"><div><div class="row-label">Spectrum</div><div class="row-sub">Jun 9 · autopay</div></div><div class="row-right"><div class="row-value">$85.00</div><div style="margin-top:4px;" id="bills-tag-spectrum"><span class="tag tag-now">DUE NOW</span></div></div></div>
+    <div class="bill-row row" onclick="toggleBill('spectrum')"><div><div class="row-label">Spectrum</div><div class="row-sub">Paid Jun 12</div></div><div class="row-right"><div class="row-value">$85.00</div><div style="margin-top:4px;" id="bills-tag-spectrum"><span class="tag tag-paid">PAID ✓</span></div></div></div>
     <div class="bill-row row" onclick="toggleBill('haircut')"><div><div class="row-label">Haircut</div><div class="row-sub">Every 2 weeks · $60/cut</div></div><div class="row-right"><div class="row-value">$120.00</div><div style="margin-top:4px;" id="bills-tag-haircut"><span class="tag tag-soon">JUN 13</span></div></div></div>
     <div class="bill-row row" onclick="toggleBill('spotify')"><div><div class="row-label">Spotify</div><div class="row-sub">~Jun 14 · autopay</div></div><div class="row-right"><div class="row-value">$13.77</div><div style="margin-top:4px;" id="bills-tag-spotify"><span class="tag tag-soon">JUN 14</span></div></div></div>
     <div class="bill-row row" onclick="toggleBill('tmobile')"><div><div class="row-label">T-Mobile</div><div class="row-sub">~Jun 15 · autopay</div></div><div class="row-right"><div class="row-value">$139.00</div><div style="margin-top:4px;" id="bills-tag-tmobile"><span class="tag tag-soon">JUN 15</span></div></div></div>
@@ -493,7 +493,7 @@
   }
 
   const cashEl = document.getElementById('cashInput');
-  cashEl.value = get('cash','345.10');
+  cashEl.value = get('cash','260.10');
   cashEl.addEventListener('input', () => set('cash', cashEl.value));
 
   const efEl = document.getElementById('efInput');
@@ -556,7 +556,7 @@
   // ── Bill toggle ──
   const BILL_DEFAULTS = {
     sfauto:   { tag:'tag-paid',     text:'PAID ✓' },
-    spectrum: { tag:'tag-now',      text:'DUE NOW' },
+    spectrum: { tag:'tag-paid',     text:'PAID ✓' },
     haircut:  { tag:'tag-soon',     text:'JUN 13' },
     spotify:  { tag:'tag-soon',     text:'JUN 14' },
     tmobile:  { tag:'tag-soon',     text:'JUN 15' },
